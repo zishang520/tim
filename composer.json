@@ -1,0 +1,32 @@
+{
+    "name": "luoyy/tim",
+    "description": "Tencent Cloud IM",
+    "require": {
+        "php": ">=5.6.0",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "authors": [{
+        "name": "luoyy",
+        "email": "zishang520@gmail.com"
+    }],
+    "keywords": ["tim", "laravel", "lumen"],
+    "support": {
+        "issues": "https://github.com/zishang520/tim/issues",
+        "source": "https://github.com/zishang520/tim"
+    },
+    "autoload": {
+        "psr-4": {
+            "luoyy\\Tim\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "aliases": {
+                "Tim": "luoyy\\Tim\\Facades\\Tim"
+            },
+            "providers": [
+                "luoyy\\Tim\\Providers\\TimServiceProvider"
+            ]
+        }
+    }
+}
