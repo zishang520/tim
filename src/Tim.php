@@ -19,7 +19,6 @@ class Tim
     const CONTENTTYPE = 'json';
 
     // app基本信息
-    protected $usersig = '';
     protected $config = null;
 
     protected static $TLS = null;
@@ -30,7 +29,6 @@ class Tim
     public function __construct($options = [])
     {
         $this->config = new Config($options);
-        $this->usersig = $this->genSig($this->config->get('identifier'));
     }
 
     /**
@@ -94,7 +92,7 @@ class Tim
         $querystring = http_build_query([
             'sdkappid' => $this->config->get('sdkappid'),
             'identifier' => $this->config->get('identifier'),
-            'usersig' => $this->usersig,
+            'usersig' => $this->genSig($this->config->get('identifier')),
             'random' => mt_rand(0, 4294967295),
             'contenttype' => self::CONTENTTYPE
         ]);
