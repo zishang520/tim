@@ -20,7 +20,6 @@ class Tim
 
     // app基本信息
     protected $config = null;
-    protected $identifier = null;
 
     protected static $TLS = null;
 
@@ -30,7 +29,6 @@ class Tim
     public function __construct($options = [])
     {
         $this->config = new Config($options);
-        $this->identifier = $this->config->get('identifier');
     }
 
     /**
@@ -69,6 +67,11 @@ class Tim
         return $this->TLSinit()->genSig($identifier, $expires);
     }
 
+    public function identifier()
+    {
+        return $this->config->get('identifier');
+    }
+
     public function errMsg()
     {
         return $this->errMsg;
@@ -93,8 +96,8 @@ class Tim
     {
         $querystring = http_build_query([
             'sdkappid' => $this->config->get('sdkappid'),
-            'identifier' => $this->identifier,
-            'usersig' => $this->genSig($this->identifier),
+            'identifier' => $this->config->get('identifier'),
+            'usersig' => $this->genSig($this->config->get('identifier')),
             'random' => mt_rand(0, 4294967295),
             'contenttype' => self::CONTENTTYPE
         ]);
