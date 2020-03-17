@@ -21,6 +21,10 @@ class Tim
     // app基本信息
     protected $config = null;
 
+    /**
+     * [$TLS TLSSig]
+     * @var    \luoyy\Tim\TLSSigAPI|\luoyy\Tim\TLSSigAPIv2
+     */
     protected static $TLS = null;
 
     protected $errMsg = '';
@@ -36,6 +40,7 @@ class Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:40:35+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @return    \luoyy\Tim\TLSSigAPI|\luoyy\Tim\TLSSigAPIv2 TLSSig
      */
     protected function TLSinit()
     {
@@ -60,23 +65,44 @@ class Tim
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $identifier [用户名，调用 REST API 时必须为 App 管理员帐号]
      * @param     int|integer $expires [过期时间]
-     * @return    [type] [description]
+     * @return    string 生成的token
      */
     public function genSig(string $identifier, int $expires = 60): string
     {
         return $this->TLSinit()->genSig($identifier, $expires);
     }
 
+    /**
+     * [identifier 获取管理员账户]
+     * @Author    zishang520
+     * @DateTime  2020-03-17T18:21:33+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @return    string [管理员账户]
+     */
     public function identifier()
     {
         return $this->config->get('identifier');
     }
 
+    /**
+     * [errMsg 获取错误信息]
+     * @Author    zishang520
+     * @DateTime  2020-03-17T18:22:13+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @return    mixed [错误内容]
+     */
     public function errMsg()
     {
         return $this->errMsg;
     }
 
+    /**
+     * [errCode 获取错误Code]
+     * @Author    zishang520
+     * @DateTime  2020-03-17T18:22:38+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @return    mixed [code值]
+     */
     public function errCode()
     {
         return $this->errCode;
@@ -87,12 +113,12 @@ class Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:41:44+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     [type] $servicename [内部服务名，不同的 servicename 对应不同的服务类型]
-     * @param     [type] $command [命令字，与 servicename 组合用来标识具体的业务功能]
-     * @param     [type] $data [请求包体]
-     * @return    [type] [description]
+     * @param     string $servicename [内部服务名，不同的 servicename 对应不同的服务类型]
+     * @param     string $command [命令字，与 servicename 组合用来标识具体的业务功能]
+     * @param     array $data [请求包体]
+     * @return    mixed [返回数据]
      */
-    public function api($servicename, $command, array $data)
+    public function api(string $servicename, string $command, array $data)
     {
         $querystring = http_build_query([
             'sdkappid' => $this->config->get('sdkappid'),
