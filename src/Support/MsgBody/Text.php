@@ -1,61 +1,33 @@
 <?php
-namespace luoyy\Tim\MsgBody;
+namespace luoyy\Tim\Support\MsgBody;
 
 use JsonSerializable;
 
 /**
- * TIMLocationElem
+ * TIMTextElem
  */
-class Location implements JsonSerializable
+class Text implements JsonSerializable
 {
     /**
      * [MSGTYPE 消息类型]
      * @var string
      */
-    const MSGTYPE = 'TIMLocationElem';
+    const MSGTYPE = 'TIMTextElem';
 
     /**
-     * [$Desc 经纬度描述]
+     * [$Text 消息数据部分]
      * @var string
      */
-    protected $Desc = '';
+    protected $Text = '';
 
-    /**
-     * [$Latitude 纬度]
-     * @var float
-     */
-    protected $Latitude;
-
-    /**
-     * [$Longitude 经度]
-     * @var float
-     */
-    protected $Longitude;
-
-    public function __construct(float $longitude = null, float $latitude = null, string $desc = '')
+    public function __construct(string $text = '')
     {
-        $this->Desc = $desc;
-        $this->Latitude = $latitude;
-        $this->Longitude = $longitude;
+        $this->Text = $text;
     }
 
-    public function setDesc(string $desc)
+    public function setText(string $text)
     {
-        $this->Desc = $desc;
-
-        return $this;
-    }
-
-    public function setLatitude(float $latitude)
-    {
-        $this->Latitude = $latitude;
-
-        return $this;
-    }
-
-    public function setLongitude(float $longitude)
-    {
-        $this->Longitude = $longitude;
+        $this->Text = $text;
 
         return $this;
     }
@@ -70,9 +42,7 @@ class Location implements JsonSerializable
         return [
             'MsgType' => self::MSGTYPE,
             'MsgContent' => [
-                "Desc" => $this->Desc,
-                "Latitude" => $this->Latitude,
-                "Longitude" => $this->Longitude
+                'Text' => $this->Text
             ]
         ];
     }

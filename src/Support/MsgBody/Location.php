@@ -1,47 +1,61 @@
 <?php
-namespace luoyy\Tim\MsgBody;
+namespace luoyy\Tim\Support\MsgBody;
 
 use JsonSerializable;
 
 /**
- * TIMFaceElem
+ * TIMLocationElem
  */
-class Face implements JsonSerializable
+class Location implements JsonSerializable
 {
     /**
      * [MSGTYPE 消息类型]
      * @var string
      */
-    const MSGTYPE = 'TIMFaceElem';
+    const MSGTYPE = 'TIMLocationElem';
 
     /**
-     * [$Index 索引]
-     * @var int
-     */
-    protected $Index;
-
-    /**
-     * [$Data 额外数据]
+     * [$Desc 经纬度描述]
      * @var string
      */
-    protected $Data = '';
+    protected $Desc = '';
 
-    public function __construct(int $index = null, string $data = '')
+    /**
+     * [$Latitude 纬度]
+     * @var float
+     */
+    protected $Latitude;
+
+    /**
+     * [$Longitude 经度]
+     * @var float
+     */
+    protected $Longitude;
+
+    public function __construct(float $longitude = null, float $latitude = null, string $desc = '')
     {
-        $this->Index = $index;
-        $this->Data = $data;
+        $this->Desc = $desc;
+        $this->Latitude = $latitude;
+        $this->Longitude = $longitude;
     }
 
-    public function setIndex(int $index)
+    public function setDesc(string $desc)
     {
-        $this->Index = $index;
+        $this->Desc = $desc;
 
         return $this;
     }
 
-    public function setData(string $data)
+    public function setLatitude(float $latitude)
     {
-        $this->Data = $data;
+        $this->Latitude = $latitude;
+
+        return $this;
+    }
+
+    public function setLongitude(float $longitude)
+    {
+        $this->Longitude = $longitude;
 
         return $this;
     }
@@ -56,8 +70,9 @@ class Face implements JsonSerializable
         return [
             'MsgType' => self::MSGTYPE,
             'MsgContent' => [
-                "Index" => $this->Index,
-                "Data" => $this->Data
+                'Desc' => $this->Desc,
+                'Latitude' => $this->Latitude,
+                'Longitude' => $this->Longitude
             ]
         ];
     }

@@ -1,5 +1,5 @@
 <?php
-namespace luoyy\Tim\MsgBody;
+namespace luoyy\Tim\Support\MsgBody;
 
 use JsonSerializable;
 
@@ -90,10 +90,10 @@ class Custom implements JsonSerializable
         return [
             'MsgType' => self::MSGTYPE,
             'MsgContent' => [
-                "Data" => $this->Data,
-                "Desc" => $this->Desc,
-                "Ext" => $this->Ext,
-                "Sound" => $this->Sound
+                'Data' => $this->Data,
+                'Desc' => $this->Desc,
+                'Ext' => $this->Ext,
+                'Sound' => $this->Sound
             ]
         ];
     }

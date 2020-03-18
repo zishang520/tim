@@ -1,33 +1,47 @@
 <?php
-namespace luoyy\Tim\MsgBody;
+namespace luoyy\Tim\Support\MsgBody;
 
 use JsonSerializable;
 
 /**
- * TIMTextElem
+ * TIMFaceElem
  */
-class Text implements JsonSerializable
+class Face implements JsonSerializable
 {
     /**
      * [MSGTYPE 消息类型]
      * @var string
      */
-    const MSGTYPE = 'TIMTextElem';
+    const MSGTYPE = 'TIMFaceElem';
 
     /**
-     * [$Text 消息数据部分]
+     * [$Index 索引]
+     * @var int
+     */
+    protected $Index;
+
+    /**
+     * [$Data 额外数据]
      * @var string
      */
-    protected $Text = '';
+    protected $Data = '';
 
-    public function __construct(string $text = '')
+    public function __construct(int $index = null, string $data = '')
     {
-        $this->Text = $text;
+        $this->Index = $index;
+        $this->Data = $data;
     }
 
-    public function setText(string $text)
+    public function setIndex(int $index)
     {
-        $this->Text = $text;
+        $this->Index = $index;
+
+        return $this;
+    }
+
+    public function setData(string $data)
+    {
+        $this->Data = $data;
 
         return $this;
     }
@@ -42,7 +56,8 @@ class Text implements JsonSerializable
         return [
             'MsgType' => self::MSGTYPE,
             'MsgContent' => [
-                'Text' => $this->Text
+                'Index' => $this->Index,
+                'Data' => $this->Data
             ]
         ];
     }
