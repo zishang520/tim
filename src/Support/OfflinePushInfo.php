@@ -2,11 +2,14 @@
 namespace luoyy\Tim\Support;
 
 use JsonSerializable;
+use luoyy\Tim\Contracts\Support\Arrayable;
+use luoyy\Tim\Contracts\Support\Jsonable;
+use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
  * OfflinePushInfo
  */
-class OfflinePushInfo implements JsonSerializable
+class OfflinePushInfo implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
      * [$Text 0表示推送，1表示不离线推送。]
@@ -73,6 +76,32 @@ class OfflinePushInfo implements JsonSerializable
      * @var string
      */
     protected $ApnsInfoImage = '';
+
+    public function __construct(
+        int    $push_flag = 0,
+        string $title = '',
+        string $desc = '',
+        string $ext = '',
+        string $android_info_sound = '',
+        string $android_info_oppo_channel_id = '',
+        string $apns_info_sound = '',
+        int    $apns_info_badge_mode = 0,
+        string $apns_info_title = '',
+        string $apns_info_sub_title = '',
+        string $apns_info_image = ''
+    ) {
+        $this->PushFlag = $push_flag;
+        $this->Title = $title;
+        $this->Desc = $desc;
+        $this->Ext = $ext;
+        $this->AndroidInfoSound = $android_info_sound;
+        $this->AndroidInfoOPPOChannelID = $android_info_oppo_channel_id;
+        $this->ApnsInfoSound = $apns_info_sound;
+        $this->ApnsInfoBadgeMode = $apns_info_badge_mode;
+        $this->ApnsInfoTitle = $apns_info_title;
+        $this->ApnsInfoSubTitle = $apns_info_sub_title;
+        $this->ApnsInfoImage = $apns_info_image;
+    }
 
     public function setPushFlag(int $push_flag)
     {

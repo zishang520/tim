@@ -1,6 +1,8 @@
 <?php
 namespace luoyy\Tim;
 
+use luoyy\Tim\Support\MsgBody;
+use luoyy\Tim\Support\OfflinePushInfo;
 use luoyy\Tim\Tim;
 
 /**
@@ -37,13 +39,13 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:13:05+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $accounts [用户名，单个用户名长度不超过32字节，单次最多导入100个用户名]
+     * @param     string ...$accounts [用户名，单个用户名长度不超过32字节，单次最多导入100个用户名]
      * @return    mixed [返回值]
      */
-    public function multiaccount_import(array $accounts)
+    public function multiaccount_import(string ...$accounts)
     {
         return $this->api('im_open_login_svc', 'account_import', [
-            'Accounts' => array_map('strval', $accounts)
+            'Accounts' => $accounts
         ]);
     }
 
@@ -52,14 +54,14 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:18:39+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $user_ids [ids]
+     * @param     string ...$user_ids [ids]
      * @return    mixed [返回值]
      */
-    public function account_delete(array $user_ids)
+    public function account_delete(string ...$user_ids)
     {
         return $this->api('im_open_login_svc', 'account_delete', [
             'DeleteItem' => array_map(function ($id) {
-                return ['UserID' => (string) $id];
+                return ['UserID' => $id];
             }, $user_ids)
         ]);
     }
@@ -69,14 +71,14 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:28:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $user_ids [ids]
+     * @param     string ...$user_ids [ids]
      * @return    mixed [返回值]
      */
-    public function account_check(array $user_ids)
+    public function account_check(string ...$user_ids)
     {
         return $this->api('im_open_login_svc', 'account_check', [
             'CheckItem' => array_map(function ($id) {
-                return ['UserID' => (string) $id];
+                return ['UserID' => $id];
             }, $user_ids)
         ]);
     }
@@ -105,13 +107,13 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:31:44+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $accounts [需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态]
+     * @param     string ...$accounts [需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态]
      * @return    mixed [返回值]
      */
-    public function querystate(array $accounts)
+    public function querystate(string ...$accounts)
     {
         return $this->api('openim', 'querystate', [
-            'To_Account' => array_map('strval', $accounts)
+            'To_Account' => $accounts
         ]);
     }
 
@@ -410,14 +412,14 @@ class TimManager extends Tim
      * @DateTime  2020-01-16T10:28:47+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $to_account [消息接收方 Identifier]
-     * @param     array $msg_body [消息内容]
+     * @param     MsgBody $msg_body [消息内容]
      * @param     string|null $from_account [消息发送方 Identifier（用于指定发送消息方帐号）]
-     * @param     array|null $offline_push_info [离线推送信息配置]
+     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
      * @param     int|integer $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
      * @param     int|integer $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒）]
      * @return    mixed [返回值]
      */
-    public function sendmsg(string $to_account, array $msg_body, string $from_account = null, array $offline_push_info = null, int $sync_other_machine = 2, int $msg_life_time = 604800)
+    public function sendmsg(string $to_account, MsgBody $msg_body, string $from_account = null, OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2, int $msg_life_time = 604800)
     {
         return $this->api('openim', 'sendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -426,8 +428,8 @@ class TimManager extends Tim
             'MsgLifeTime' => $msg_life_time,
             'MsgRandom' => mt_rand(0, 4294967295),
             'MsgTimeStamp' => time(),
-            'MsgBody' => $msg_body,
-            'OfflinePushInfo' => $offline_push_info
+            'MsgBody' => $msg_body->toArray(),
+            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
         ]);
     }
 
@@ -437,21 +439,21 @@ class TimManager extends Tim
      * @DateTime  2020-01-16T10:32:34+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     array $accounts [消息接收方 Identifier]
-     * @param     array $msg_body [TIM 消息]
+     * @param     MsgBody $msg_body [TIM 消息]
      * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
-     * @param     array|null $offline_push_info [离线推送信息配置]
+     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
      * @param     int|integer $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
-    public function batchsendmsg(array $accounts, array $msg_body, string $from_account = null, array $offline_push_info = null, int $sync_other_machine = 2)
+    public function batchsendmsg(array $accounts, MsgBody $msg_body, string $from_account = null, OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2)
     {
         return $this->api('openim', 'batchsendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
             'From_Account' => $from_account,
             'To_Account' => array_map('strval', $accounts),
             'MsgRandom' => mt_rand(0, 4294967295),
-            'MsgBody' => $msg_body,
-            'OfflinePushInfo' => $offline_push_info
+            'MsgBody' => $msg_body->toArray(),
+            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
         ]);
     }
 
@@ -462,11 +464,11 @@ class TimManager extends Tim
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $from_account [消息发送方 Identifier，用于指定发送消息方]
      * @param     string $to_account [消息接收方 Identifier]
-     * @param     array $msg_body [消息内容]
+     * @param     MsgBody $msg_body [消息内容]
      * @param     int|integer $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
-    public function importmsg(string $from_account, string $to_account, array $msg_body, int $sync_other_machine = 2)
+    public function importmsg(string $from_account, string $to_account, MsgBody $msg_body, int $sync_other_machine = 2)
     {
         return $this->api('openim', 'importmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -474,7 +476,7 @@ class TimManager extends Tim
             'To_Account' => $to_account,
             'MsgRandom' => mt_rand(0, 4294967295),
             'MsgTimeStamp' => time(),
-            'MsgBody' => $msg_body
+            'MsgBody' => $msg_body->toArray()
         ]);
     }
 
@@ -796,23 +798,23 @@ class TimManager extends Tim
      * @DateTime  2020-01-16T14:20:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $group_id [向哪个群组发送消息]
-     * @param     array $msg_body [消息体]
+     * @param     MsgBody $msg_body [消息体]
      * @param     string|null $from_account [消息来源帐号]
      * @param     string|null $msg_priority [消息的优先级]
-     * @param     array|null $offline_push_info [离线推送信息配置]
+     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
      * @param     array|null $forbid_callback_control [消息回调禁止开关]
      * @param     int|null $online_only_flag [1表示消息仅发送在线成员，默认0表示发送所有成员，音视频聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）不支持该参数]
      * @return    mixed [返回值]
      */
-    public function send_group_msg(string $group_id, array $msg_body, string $from_account = null, string $msg_priority = null, array $offline_push_info = null, array $forbid_callback_control = null, int $online_only_flag = null)
+    public function send_group_msg(string $group_id, MsgBody $msg_body, string $from_account = null, string $msg_priority = null, OfflinePushInfo $offline_push_info = null, array $forbid_callback_control = null, int $online_only_flag = null)
     {
         return $this->api('group_open_http_svc', 'send_group_msg', [
             'GroupId' => $group_id,
             'Random' => mt_rand(0, 4294967295),
             'MsgPriority' => $msg_priority,
-            'MsgBody' => $msg_body,
+            'MsgBody' => $msg_body->toArray(),
             'From_Account' => $from_account,
-            'OfflinePushInfo' => $offline_push_info,
+            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info,
             'ForbidCallbackControl' => $forbid_callback_control,
             'OnlineOnlyFlag' => $online_only_flag
         ]);
@@ -1060,10 +1062,10 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:37:12+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $request_field [该字段用来指定需要拉取的运营数据，不填默认拉取所有字段。详细可参阅下文可拉取的运营字段]
+     * @param     string ...$request_field [该字段用来指定需要拉取的运营数据，不填默认拉取所有字段。详细可参阅下文可拉取的运营字段]
      * @return    mixed [返回值]
      */
-    public function getappinfo(array $request_field)
+    public function getappinfo(string ...$request_field)
     {
         return $this->api('openconfigsvr', 'getappinfo', [
             'RequestField' => $request_field

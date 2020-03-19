@@ -1,5 +1,5 @@
 <?php
-namespace luoyy\Tim\Support\MsgBody;
+namespace luoyy\Tim\Support;
 
 use JsonSerializable;
 use luoyy\Tim\Contracts\Support\Arrayable;
@@ -7,30 +7,27 @@ use luoyy\Tim\Contracts\Support\Jsonable;
 use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
- * TIMTextElem
+ * MsgBody
  */
-class Text implements JsonSerializable, Arrayable, Renderable, Jsonable
+class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
-    /**
-     * [MSGTYPE 消息类型]
-     * @var string
-     */
-    const MSGTYPE = 'TIMTextElem';
+    private $MsgBody = [];
 
-    /**
-     * [$Text 消息数据部分]
-     * @var string
-     */
-    protected $Text = '';
-
-    public function __construct(string $text = '')
+    public function __construct(Arrayable ...$msg_body)
     {
-        $this->Text = $text;
+        $this->MsgBody = $msg_body;
     }
 
-    public function setText(string $text)
+    public function set(Arrayable ...$msg_body)
     {
-        $this->Text = $text;
+        $this->MsgBody = $msg_body;
+
+        return $this;
+    }
+
+    public function append(Arrayable ...$msg_body)
+    {
+        array_push($this->MsgBody, ...$msg_body);
 
         return $this;
     }
@@ -42,12 +39,9 @@ class Text implements JsonSerializable, Arrayable, Renderable, Jsonable
      */
     public function toArray()
     {
-        return [
-            'MsgType' => self::MSGTYPE,
-            'MsgContent' => [
-                'Text' => $this->Text
-            ]
-        ];
+        return array_map(function ($item) {
+            return $item->toArray();
+        }, $this->MsgBody);
     }
 
     /**
@@ -82,5 +76,10 @@ class Text implements JsonSerializable, Arrayable, Renderable, Jsonable
     public function __toString()
     {
         return $this->render();
+    }
+
+    public function __clone()
+    {
+        $this->MsgBody = clone $this->MsgBody;
     }
 }

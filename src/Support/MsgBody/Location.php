@@ -2,11 +2,14 @@
 namespace luoyy\Tim\Support\MsgBody;
 
 use JsonSerializable;
+use luoyy\Tim\Contracts\Support\Arrayable;
+use luoyy\Tim\Contracts\Support\Jsonable;
+use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
  * TIMLocationElem
  */
-class Location implements JsonSerializable
+class Location implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
      * [MSGTYPE 消息类型]
