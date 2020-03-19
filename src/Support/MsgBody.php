@@ -77,9 +77,4 @@ class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
     {
         return $this->render();
     }
-
-    public function __clone()
-    {
-        $this->MsgBody = clone $this->MsgBody;
-    }
 }
