@@ -571,7 +571,7 @@ class TimManager extends Tim
     public function get_group_info(array $group_id_list, array $response_filter = null)
     {
         return $this->api('group_open_http_svc', 'get_group_info', [
-            'GroupIdList' => $group_id_list,
+            'GroupIdList' => array_map('strval', $group_id_list),
             'ResponseFilter' => $response_filter
         ]);
     }
@@ -754,7 +754,7 @@ class TimManager extends Tim
     {
         return $this->api('group_open_http_svc', 'get_role_in_group', [
             'GroupId' => $group_id,
-            'User_Account' => $user_account
+            'User_Account' => array_map('strval', $user_account)
         ]);
     }
 
@@ -772,7 +772,7 @@ class TimManager extends Tim
     {
         return $this->api('group_open_http_svc', 'forbid_send_msg', [
             'GroupId' => $group_id,
-            'Members_Account' => $members_account,
+            'Members_Account' => array_map('strval', $members_account),
             'ShutUpTime' => $shut_up_time
         ]);
     }
@@ -834,7 +834,7 @@ class TimManager extends Tim
     {
         return $this->api('group_open_http_svc', 'send_group_system_notification', [
             'GroupId' => $group_id,
-            'ToMembers_Account' => $to_members_account,
+            'ToMembers_Account' => !is_null($to_members_account) ? array_map('strval', $to_members_account) : null,
             'Content' => $content
         ]);
     }
