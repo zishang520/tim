@@ -25,11 +25,24 @@ class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
         return $this;
     }
 
-    public function append(Arrayable ...$msg_body)
+    public function add(Arrayable ...$msg_body)
     {
         array_push($this->MsgBody, ...$msg_body);
 
         return $this;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function append(Arrayable ...$msg_body)
+    {
+        return $this->add(...$msg_body);
+    }
+
+    public function isEmpty()
+    {
+        return !$this->MsgBody;
     }
 
     /**
