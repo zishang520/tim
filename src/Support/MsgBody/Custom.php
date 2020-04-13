@@ -1,15 +1,12 @@
 <?php
 namespace luoyy\Tim\Support\MsgBody;
 
-use JsonSerializable;
-use luoyy\Tim\Contracts\Support\Arrayable;
-use luoyy\Tim\Contracts\Support\Jsonable;
-use luoyy\Tim\Contracts\Support\Renderable;
+use luoyy\Tim\Contracts\Elem;
 
 /**
  * TIMCustomElem
  */
-class Custom implements JsonSerializable, Arrayable, Renderable, Jsonable
+class Custom extends Elem
 {
     /**
      * [MSGTYPE 消息类型]
@@ -83,15 +80,20 @@ class Custom implements JsonSerializable, Arrayable, Renderable, Jsonable
         return $this;
     }
 
+    public function type()
+    {
+        return self::MSGTYPE;
+    }
+
     /**
      * Convert the fluent instance to an array.
      *
      * @return array
      */
-    public function toArray()
+    public function data()
     {
         return [
-            'MsgType' => self::MSGTYPE,
+            'MsgType' => $this->type(),
             'MsgContent' => [
                 'Data' => $this->Data,
                 'Desc' => $this->Desc,
@@ -99,39 +101,5 @@ class Custom implements JsonSerializable, Arrayable, Renderable, Jsonable
                 'Sound' => $this->Sound
             ]
         ];
-    }
-
-    /**
-     * Convert the object into something JSON serializable.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
-    public function render()
-    {
-        return $this->toJson();
-    }
-
-    /**
-     * Convert the fluent instance to JSON.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0)
-    {
-        return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }
