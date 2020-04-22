@@ -170,7 +170,7 @@ class TimManager extends Tim
      * @param     int|integer $force_add_flags [管理员强制加好友标记：1表示强制加好友，0表示常规加好友方式]
      * @return    mixed [返回值]
      */
-    public function friend_add(string $from_account, array $add_friend_item, string $add_type = null, int $force_add_flags = null)
+    public function friend_add(string $from_account, array $add_friend_item, ?string $add_type = null, ?int $force_add_flags = null)
     {
         return $this->api('sns', 'friend_add', [
             'From_Account' => $from_account,
@@ -207,7 +207,7 @@ class TimManager extends Tim
      * @param     string|null $deletet_type [删除模式]
      * @return    mixed [返回值]
      */
-    public function friend_delete(string $from_account, array $accounts, string $deletet_type = null)
+    public function friend_delete(string $from_account, array $accounts, ?string $deletet_type = null)
     {
         return $this->api('sns', 'friend_delete', [
             'From_Account' => $from_account,
@@ -225,7 +225,7 @@ class TimManager extends Tim
      * @param     string|null $deletet_type [删除模式]
      * @return    mixed [返回值]
      */
-    public function friend_delete_all(string $from_account, string $deletet_type = null)
+    public function friend_delete_all(string $from_account, ?string $deletet_type = null)
     {
         return $this->api('sns', 'friend_delete_all', [
             'From_Account' => $from_account,
@@ -376,7 +376,7 @@ class TimManager extends Tim
      * @param     array|null $accounts [需要加入新增分组的好友的 UserID 列表]
      * @return    mixed [返回值]
      */
-    public function group_add(string $from_account, array $group_name, array $accounts = null)
+    public function group_add(string $from_account, array $group_name, ?array $accounts = null)
     {
         return $this->api('sns', 'group_add', [
             'From_Account' => $from_account,
@@ -419,7 +419,7 @@ class TimManager extends Tim
      * @param     int|integer $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒）]
      * @return    mixed [返回值]
      */
-    public function sendmsg(string $to_account, MsgBody $msg_body, string $from_account = null, OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2, int $msg_life_time = 604800)
+    public function sendmsg(string $to_account, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2, int $msg_life_time = 604800)
     {
         return $this->api('openim', 'sendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -445,7 +445,7 @@ class TimManager extends Tim
      * @param     int|integer $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
-    public function batchsendmsg(array $accounts, MsgBody $msg_body, string $from_account = null, OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2)
+    public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2)
     {
         return $this->api('openim', 'batchsendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -513,7 +513,7 @@ class TimManager extends Tim
      * @param     string|null $group_type [如果仅需要返回特定群组形态的群组，可以通过 GroupType 进行过滤，但此时返回的 TotalCount 的含义就变成了 App 中属于该群组形态的群组总数。不填为获取所有类型的群组。 群组形态包括 Public（公开群），Private（私密群），ChatRoom（聊天室），AVChatRoom（音视频聊天室）和 BChatRoom（在线成员广播大群）]
      * @return    mixed [返回值]
      */
-    public function get_appid_group_list(int $limit = null, int $next = null, string $group_type = null)
+    public function get_appid_group_list(?int $limit = null, ?int $next = null, ?string $group_type = null)
     {
         return $this->api('group_open_http_svc', 'get_appid_group_list', [
             'Limit' => $limit,
@@ -541,7 +541,7 @@ class TimManager extends Tim
      * @param     array|null $app_member_defined_data [群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅 自定义字段]
      * @return    mixed [返回值]
      */
-    public function create_group(string $name, string $type, string $owner_account = null, string $group_id = null, array $member_list = null, int $max_member_count = null, string $apply_join_option = null, string $introduction = null, string $notification = null, string $face_url = null, array $app_defined_data = null, array $app_member_defined_data = null)
+    public function create_group(string $name, string $type, ?string $owner_account = null, ?string $group_id = null, ?array $member_list = null, ?int $max_member_count = null, ?string $apply_join_option = null, ?string $introduction = null, ?string $notification = null, ?string $face_url = null, ?array $app_defined_data = null, ?array $app_member_defined_data = null)
     {
         return $this->api('group_open_http_svc', 'create_group', [
             'Owner_Account' => $owner_account,
@@ -568,7 +568,7 @@ class TimManager extends Tim
      * @param     array|null $response_filter [包含三个过滤器：GroupBaseInfoFilter，MemberInfoFilter，AppDefinedDataFilter_Group，分别是基础信息字段过滤器，成员信息字段过滤器，群组维度的自定义字段过滤器]
      * @return    mixed [返回值]
      */
-    public function get_group_info(array $group_id_list, array $response_filter = null)
+    public function get_group_info(array $group_id_list, ?array $response_filter = null)
     {
         return $this->api('group_open_http_svc', 'get_group_info', [
             'GroupIdList' => array_map('strval', $group_id_list),
@@ -589,7 +589,7 @@ class TimManager extends Tim
      * @param     array|null $app_defined_data_filter_group_member [默认情况是没有的。该字段用来群成员维度的自定义字段过滤器，指定需要获取的群成员维度的自定义字段，群成员维度的自定义字段详情请参阅 自定义字段]
      * @return    mixed [返回值]
      */
-    public function get_group_member_info(string $group_id, int $limit = null, int $offset = null, array $member_info_filter = null, array $member_role_filter = null, array $app_defined_data_filter_group_member = null)
+    public function get_group_member_info(string $group_id, ?int $limit = null, ?int $offset = null, ?array $member_info_filter = null, ?array $member_role_filter = null, ?array $app_defined_data_filter_group_member = null)
     {
         return $this->api('group_open_http_svc', 'get_group_member_info', [
             'GroupId' => $group_id,
@@ -616,7 +616,7 @@ class TimManager extends Tim
      * @param     array|null $app_defined_data [默认情况是没有的。开通群组维度的自定义字段详情请参见 自定义字段]
      * @return    mixed [返回值]
      */
-    public function modify_group_base_info(string $group_id, string $name = null, string $introduction = null, string $notification = null, string $face_url = null, int $max_member_num = null, string $apply_join_option = null, array $app_defined_data = null)
+    public function modify_group_base_info(string $group_id, ?string $name = null, ?string $introduction = null, ?string $notification = null, ?string $face_url = null, ?int $max_member_num = null, ?string $apply_join_option = null, ?array $app_defined_data = null)
     {
         return $this->api('group_open_http_svc', 'modify_group_base_info', [
             'GroupId' => $group_id,
@@ -662,7 +662,7 @@ class TimManager extends Tim
      * @param     int|integer $silence [是否静默删人。0表示非静默删人，1表示静默删人。静默即删除成员时不通知群里所有成员，只通知被删除群成员。不填写该字段时默认为0]
      * @return    mixed [返回值]
      */
-    public function delete_group_member(string $group_id, array $member_todel_account, string $reason = null, int $silence = 0)
+    public function delete_group_member(string $group_id, array $member_todel_account, ?string $reason = null, int $silence = 0)
     {
         return $this->api('group_open_http_svc', 'delete_group_member', [
             'GroupId' => $group_id,
@@ -686,7 +686,7 @@ class TimManager extends Tim
      * @param     array|null $app_member_defined_data [群成员维度的自定义字段，默认情况是没有的，需要开通，详情请参阅 群组系统]
      * @return    mixed [返回值]
      */
-    public function modify_group_member_info(string $group_id, string $member_account, int $shut_up_time = null, string $role = null, string $msg_flag = null, string $name_card = null, array $app_member_defined_data = null)
+    public function modify_group_member_info(string $group_id, string $member_account, ?int $shut_up_time = null, ?string $role = null, ?string $msg_flag = null, ?string $name_card = null, ?array $app_member_defined_data = null)
     {
         return $this->api('group_open_http_svc', 'modify_group_member_info', [
             'GroupId' => $group_id,
@@ -728,7 +728,7 @@ class TimManager extends Tim
      * @param     array|null $response_filter [分别包含 GroupBaseInfoFilter 和 SelfInfoFilter 两个过滤器； GroupBaseInfoFilter 表示需要拉取哪些基础信息字段，详情请参阅 群组系统；SelfInfoFilter 表示需要拉取用户在每个群组中的哪些个人资料，详情请参阅 群组系统]
      * @return    mixed [返回值]
      */
-    public function get_joined_group_list(string $member_account, int $with_huge_groups = 0, int $with_no_active_groups = 0, string $group_type = null, int $limit = null, int $offset = null, array $response_filter = null)
+    public function get_joined_group_list(string $member_account, int $with_huge_groups = 0, int $with_no_active_groups = 0, ?string $group_type = null, ?int $limit = null, ?int $offset = null, ?array $response_filter = null)
     {
         return $this->api('group_open_http_svc', 'get_joined_group_list', [
             'Member_Account' => $member_account,
@@ -806,7 +806,7 @@ class TimManager extends Tim
      * @param     int|null $online_only_flag [1表示消息仅发送在线成员，默认0表示发送所有成员，音视频聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）不支持该参数]
      * @return    mixed [返回值]
      */
-    public function send_group_msg(string $group_id, MsgBody $msg_body, string $from_account = null, string $msg_priority = null, OfflinePushInfo $offline_push_info = null, array $forbid_callback_control = null, int $online_only_flag = null)
+    public function send_group_msg(string $group_id, MsgBody $msg_body, ?string $from_account = null, ?string $msg_priority = null, ?OfflinePushInfo $offline_push_info = null, ?array $forbid_callback_control = null, ?int $online_only_flag = null)
     {
         return $this->api('group_open_http_svc', 'send_group_msg', [
             'GroupId' => $group_id,
@@ -830,7 +830,7 @@ class TimManager extends Tim
      * @param     array|null $to_members_account [接收者群成员列表，不填或为空表示全员下发]
      * @return    mixed [返回值]
      */
-    public function send_group_system_notification(string $group_id, string $content, array $to_members_account = null)
+    public function send_group_system_notification(string $group_id, string $content, ?array $to_members_account = null)
     {
         return $this->api('group_open_http_svc', 'send_group_system_notification', [
             'GroupId' => $group_id,
@@ -893,7 +893,7 @@ class TimManager extends Tim
      * @param     array|null $app_defined_data [群组维度的自定义字段，默认情况是没有的，需要开通，详细请参阅 群组系统]
      * @return    mixed [返回值]
      */
-    public function import_group(string $name, string $type, string $owner_account = null, string $group_id = null, int $create_time = null, int $max_member_count = null, string $apply_join_option = null, string $introduction = null, string $notification = null, string $face_url = null, array $app_defined_data = null)
+    public function import_group(string $name, string $type, ?string $owner_account = null, ?string $group_id = null, ?int $create_time = null, ?int $max_member_count = null, ?string $apply_join_option = null, ?string $introduction = null, ?string $notification = null, ?string $face_url = null, ?array $app_defined_data = null)
     {
         return $this->api('group_open_http_svc', 'import_group', [
             'Owner_Account' => $owner_account,
@@ -989,7 +989,7 @@ class TimManager extends Tim
      * @param     int|null $req_msg_seq [拉取消息的最大 seq]
      * @return    mixed [返回值]
      */
-    public function group_msg_get_simple(string $group_id, int $req_msg_number, int $req_msg_seq = null)
+    public function group_msg_get_simple(string $group_id, int $req_msg_number, ?int $req_msg_seq = null)
     {
         return $this->api('group_open_http_svc', 'group_msg_get_simple', [
             'GroupId' => $group_id,
@@ -1012,7 +1012,7 @@ class TimManager extends Tim
      * @param     int|null $groupmsg_nospeaking_time [群组消息禁言时间，单位为秒，非负整数，最大值为4294967295（十六进制 0xFFFFFFFF）。等于0代表取消帐号禁言；最大值4294967295（十六进制 0xFFFFFFFF）代表帐号被设置永久禁言；其它代表该帐号禁言时间]
      * @return    mixed [返回值]
      */
-    public function setnospeaking(string $set_account, int $c2cmsg_nospeaking_time = null, int $groupmsg_nospeaking_time = null)
+    public function setnospeaking(string $set_account, ?int $c2cmsg_nospeaking_time = null, ?int $groupmsg_nospeaking_time = null)
     {
         return $this->api('openconfigsvr', 'setnospeaking', [
             'Set_Account' => $set_account,
