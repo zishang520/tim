@@ -442,7 +442,7 @@ class TimManager extends Tim
      * @param     MsgBody $msg_body [TIM 消息]
      * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
      * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
-     * @param     int|null $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
+     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上 2：消息不同步至 From_Account；若不填写默认情况下会将消息存 From_Account 漫游]
      * @return    mixed [返回值]
      */
     public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null)
