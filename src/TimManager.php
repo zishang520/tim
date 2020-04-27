@@ -167,7 +167,7 @@ class TimManager extends Tim
      * @param     string $from_account [需要为该 UserID 添加好友]
      * @param     array $add_friend_item [好友结构体对象]
      * @param     string $add_type [加好友方式（默认双向加好友方式）]
-     * @param     int|integer $force_add_flags [管理员强制加好友标记：1表示强制加好友，0表示常规加好友方式]
+     * @param     int $force_add_flags [管理员强制加好友标记：1表示强制加好友，0表示常规加好友方式]
      * @return    mixed [返回值]
      */
     public function friend_add(string $from_account, array $add_friend_item, ?string $add_type = null, ?int $force_add_flags = null)
@@ -258,9 +258,9 @@ class TimManager extends Tim
      * @DateTime  2020-01-15T17:51:48+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $from_account [指定要拉取好友数据的用户的 UserID]
-     * @param     int|integer $start_index [分页的起始位置]
-     * @param     int|integer $standard_sequence [上次拉好友数据时返回的 StandardSequence，如果 StandardSequence 字段的值与后台一致，后台不会返回标配好友数据]
-     * @param     int|integer $custom_sequence [上次拉好友数据时返回的 CustomSequence，如果 CustomSequence 字段的值与后台一致，后台不会返回自定义好友数据]
+     * @param     int $start_index [分页的起始位置]
+     * @param     int $standard_sequence [上次拉好友数据时返回的 StandardSequence，如果 StandardSequence 字段的值与后台一致，后台不会返回标配好友数据]
+     * @param     int $custom_sequence [上次拉好友数据时返回的 CustomSequence，如果 CustomSequence 字段的值与后台一致，后台不会返回自定义好友数据]
      * @return    mixed [返回值]
      */
     public function friend_get(string $from_account, int $start_index = 0, int $standard_sequence = 0, int $custom_sequence = 0)
@@ -332,9 +332,9 @@ class TimManager extends Tim
      * @DateTime  2020-01-15T18:03:17+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $from_account [需要拉取该 UserID 的黑名单]
-     * @param     int|integer $start_index [拉取的起始位置]
-     * @param     int|integer $max_limited [每页最多拉取的黑名单数]
-     * @param     int|integer $last_sequence [上一次拉黑名单时后台返回给客户端的 Seq，初次拉取时为0]
+     * @param     int $start_index [拉取的起始位置]
+     * @param     int $max_limited [每页最多拉取的黑名单数]
+     * @param     int $last_sequence [上一次拉黑名单时后台返回给客户端的 Seq，初次拉取时为0]
      * @return    mixed [返回值]
      */
     public function black_list_get(string $from_account, int $start_index = 0, int $max_limited = 30, int $last_sequence = 0)
@@ -415,11 +415,11 @@ class TimManager extends Tim
      * @param     MsgBody $msg_body [消息内容]
      * @param     string|null $from_account [消息发送方 Identifier（用于指定发送消息方帐号）]
      * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
-     * @param     int|integer $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
-     * @param     int|integer $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒）]
+     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
+     * @param     int|null $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒）]
      * @return    mixed [返回值]
      */
-    public function sendmsg(string $to_account, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2, int $msg_life_time = 604800)
+    public function sendmsg(string $to_account, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null, ?int $msg_life_time = null)
     {
         return $this->api('openim', 'sendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -442,10 +442,10 @@ class TimManager extends Tim
      * @param     MsgBody $msg_body [TIM 消息]
      * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
      * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
-     * @param     int|integer $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
+     * @param     int|null $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
-    public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, int $sync_other_machine = 2)
+    public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null)
     {
         return $this->api('openim', 'batchsendmsg', [
             'SyncOtherMachine' => $sync_other_machine,
@@ -465,13 +465,13 @@ class TimManager extends Tim
      * @param     string $from_account [消息发送方 Identifier，用于指定发送消息方]
      * @param     string $to_account [消息接收方 Identifier]
      * @param     MsgBody $msg_body [消息内容]
-     * @param     int|integer $sync_other_machine [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
+     * @param     int $sync_from_old_system [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
-    public function importmsg(string $from_account, string $to_account, MsgBody $msg_body, int $sync_other_machine = 2)
+    public function importmsg(string $from_account, string $to_account, MsgBody $msg_body, int $sync_from_old_system = 2)
     {
         return $this->api('openim', 'importmsg', [
-            'SyncOtherMachine' => $sync_other_machine,
+            'SyncFromOldSystem' => $sync_from_old_system,
             'From_Account' => $from_account,
             'To_Account' => $to_account,
             'MsgRandom' => mt_rand(0, 4294967295),
@@ -637,7 +637,7 @@ class TimManager extends Tim
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $group_id [操作的群 ID]
      * @param     array $member_list [待添加的群成员数组]
-     * @param     int|integer $silence [是否静默加人。0：非静默加人；1：静默加人。不填该字段默认为0]
+     * @param     int $silence [是否静默加人。0：非静默加人；1：静默加人。不填该字段默认为0]
      * @return    mixed [返回值]
      */
     public function add_group_member(string $group_id, array $member_list, int $silence = 0)
@@ -659,7 +659,7 @@ class TimManager extends Tim
      * @param     string $group_id [操作的群 ID]
      * @param     array $member_todel_account [待删除的群成员]
      * @param     string|null $reason [踢出用户原因]
-     * @param     int|integer $silence [是否静默删人。0表示非静默删人，1表示静默删人。静默即删除成员时不通知群里所有成员，只通知被删除群成员。不填写该字段时默认为0]
+     * @param     int $silence [是否静默删人。0表示非静默删人，1表示静默删人。静默即删除成员时不通知群里所有成员，只通知被删除群成员。不填写该字段时默认为0]
      * @return    mixed [返回值]
      */
     public function delete_group_member(string $group_id, array $member_todel_account, ?string $reason = null, int $silence = 0)
@@ -720,8 +720,8 @@ class TimManager extends Tim
      * @DateTime  2020-01-16T12:18:47+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $member_account [需要查询的用户帐号]
-     * @param     int|integer $with_huge_groups [是否获取用户加入的音视频聊天室和在线成员广播大群，0表示不获取，1表示获取。默认为0]
-     * @param     int|integer $with_no_active_groups [是否获取用户加入的未激活私有群信息，0表示不获取，1表示获取。默认为0]
+     * @param     int $with_huge_groups [是否获取用户加入的音视频聊天室和在线成员广播大群，0表示不获取，1表示获取。默认为0]
+     * @param     int $with_no_active_groups [是否获取用户加入的未激活私有群信息，0表示不获取，1表示获取。默认为0]
      * @param     string|null $group_type [拉取哪种群组形态，例如 Private，Public，ChatRoom 或 AVChatRoom，不填为拉取所有]
      * @param     int|null $limit [单次拉取的群组数量，如果不填代表所有群组，分页方式与 获取 App 中的所有群组 相同]
      * @param     int|null $offset [从第多少个群组开始拉取，分页方式与 获取 App 中的所有群组 相同]
