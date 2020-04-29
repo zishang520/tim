@@ -145,9 +145,9 @@ class Tim
                 })
             ])->getBody();
             if (!empty($body) && !empty($body = json_decode($body))) {
-                if (!empty($body->ErrorCode)) {
-                    $this->errMsg = $body->ErrorInfo;
-                    $this->errCode = $body->ErrorCode;
+                if (!empty($body->ErrorCode) || !isset($body->ActionStatus) || (strtolower($body->ActionStatus) !== 'ok')) {
+                    $this->errMsg = $body->ErrorInfo ?? '请求失败';
+                    $this->errCode = $body->ErrorCode ?? -1;
                     return false;
                 }
                 return $body;

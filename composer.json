@@ -2,7 +2,7 @@
     "name": "luoyy/tim",
     "description": "Tencent Cloud IM",
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.0.0",
         "guzzlehttp/guzzle": "^6.3"
     },
     "authors": [{
