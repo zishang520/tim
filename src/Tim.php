@@ -18,6 +18,12 @@ class Tim
     const VER = 'v4';
     const CONTENTTYPE = 'json';
 
+    const PRIVATE_ROOM = 'Private';
+    const PUBLIC_ROOM = 'Public';
+    const CHAT_ROOM = 'ChatRoom';
+    const AV_CHAT_ROOM = 'AVChatRoom';
+    const B_CHAT_ROOM = 'BChatRoom';
+
     // app基本信息
     protected $config = null;
 
