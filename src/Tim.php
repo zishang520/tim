@@ -109,6 +109,71 @@ class Tim
     }
 
     /**
+     * [isBChatRoom 是否广播大群]
+     * @Author    zishang520
+     * @DateTime  2020-05-09T11:29:00+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     string $type [直播类型]
+     * @return    bool
+     */
+    public function isBChatRoom(string $type): bool
+    {
+        return strcmp($type, 'BChatRoom') === 0;
+    }
+
+    /**
+     * [isAVChatRoom 是否音视频聊天室]
+     * @Author    zishang520
+     * @DateTime  2020-05-09T11:29:12+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     string $type [直播类型]
+     * @return    bool
+     */
+    public function isAVChatRoom(string $type): bool
+    {
+        return strcmp($type, 'AVChatRoom') === 0;
+    }
+
+    /**
+     * [isChatRoom 是否聊天室]
+     * @Author    zishang520
+     * @DateTime  2020-05-09T11:29:49+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     string $type [直播类型]
+     * @return    bool
+     */
+    public function isChatRoom(string $type): bool
+    {
+        return strcmp($type, 'ChatRoom') === 0;
+    }
+
+    /**
+     * [isPublicRoom 是否公开群]
+     * @Author    zishang520
+     * @DateTime  2020-05-09T11:30:01+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     string $type [直播类型]
+     * @return    bool
+     */
+    public function isPublicRoom(string $type): bool
+    {
+        return strcmp($type, 'Public') === 0;
+    }
+
+    /**
+     * [isPrivateRoom 是否私有群]
+     * @Author    zishang520
+     * @DateTime  2020-05-09T11:30:12+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     string $type [直播类型]
+     * @return    bool
+     */
+    public function isPrivateRoom(string $type): bool
+    {
+        return strcmp($type, 'Private') === 0;
+    }
+
+    /**
      * [api APi]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:41:44+0800
