@@ -25,7 +25,7 @@ class Tim
      * [$TLS TLSSig]
      * @var    \luoyy\Tim\TLSSigAPI|\luoyy\Tim\TLSSigAPIv2
      */
-    protected static $TLS = null;
+    protected $TLS = null;
 
     protected $errMsg = '';
     protected $errCode = 0;
@@ -44,18 +44,18 @@ class Tim
      */
     protected function TLSinit()
     {
-        if (is_null(self::$TLS)) {
+        if (is_null($this->TLS)) {
             switch ($this->config->get('tls')) {
                 case 'v1':
-                    self::$TLS = new TLSSigAPI($this->config->get('sdkappid'), sprintf("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", wordwrap($this->config->get('public_key'), 64, "\n", true)), sprintf("-----BEGIN PRIVATE KEY-----\n%s\n-----END PRIVATE KEY-----\n", wordwrap($this->config->get('private_key'), 64, "\n", true)));
+                    $this->TLS = new TLSSigAPI($this->config->get('sdkappid'), sprintf("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", wordwrap($this->config->get('public_key'), 64, "\n", true)), sprintf("-----BEGIN PRIVATE KEY-----\n%s\n-----END PRIVATE KEY-----\n", wordwrap($this->config->get('private_key'), 64, "\n", true)));
                     break;
                 case 'v2':
                 default:
-                    self::$TLS = new TLSSigAPIv2($this->config->get('sdkappid'), $this->config->get('secret_key'));
+                    $this->TLS = new TLSSigAPIv2($this->config->get('sdkappid'), $this->config->get('secret_key'));
                     break;
             }
         }
-        return self::$TLS;
+        return $this->TLS;
     }
 
     /**
