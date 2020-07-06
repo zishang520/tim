@@ -67,7 +67,7 @@ class Tim
      * @param     int|integer $expires [过期时间]
      * @return    string 生成的token
      */
-    public function genSig(string $identifier, int $expires = 60): string
+    public function genSig(string $identifier, int $expires = 86400): string
     {
         return $this->TLSinit()->genSig($identifier, $expires);
     }
