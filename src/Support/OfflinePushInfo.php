@@ -12,7 +12,7 @@ use luoyy\Tim\Contracts\Support\Renderable;
 class OfflinePushInfo implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
-     * [$Text 0表示推送，1表示不离线推送。]
+     * [$PushFlag 0表示推送，1表示不离线推送。]
      * @var int
      */
     protected $PushFlag = 0;

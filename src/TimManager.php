@@ -3,6 +3,8 @@ namespace luoyy\Tim;
 
 use luoyy\Tim\Support\MsgBody;
 use luoyy\Tim\Support\OfflinePushInfo;
+use luoyy\Tim\Support\UserAttrs;
+use luoyy\Tim\Support\UserTags;
 use luoyy\Tim\Tim;
 
 /**
@@ -136,9 +138,9 @@ class TimManager extends Tim
      * @copyright (c) ZiShang520 All Rights Reserved
      * @link      https://cloud.tencent.com/document/product/269/2282
      * @param     string $to_account [消息接收方 UserID]
-     * @param     MsgBody $msg_body [消息内容，具体格式请参考 消息格式描述（注意，一条消息可包括多种消息元素，MsgBody 为 Array 类型）]
+     * @param     \luoyy\Tim\Support\MsgBody $msg_body [消息内容，具体格式请参考 消息格式描述（注意，一条消息可包括多种消息元素，MsgBody 为 Array 类型）]
      * @param     string|null $from_account [消息发送方 UserID（用于指定发送消息方帐号）]
-     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置，具体可参考 消息格式描述]
+     * @param     \luoyy\Tim\Support\OfflinePushInfo|null $offline_push_info [离线推送信息配置，具体可参考 消息格式描述]
      * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
      * @param     int|null $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒） 若设置该字段为0，则消息只发在线用户，不保存离线 若设置该字段超过7天（604800秒），仍只保存7天 若不设置该字段，则默认保存7天]
      * @param     array|null $forbid_callback_control [消息回调禁止开关，只对本条消息有效，ForbidBeforeSendMsgCallback 表示禁止发消息前回调，ForbidAfterSendMsgCallback 表示禁止发消息后回调]
@@ -166,9 +168,9 @@ class TimManager extends Tim
      * @copyright (c) ZiShang520 All Rights Reserved
      * @link      https://cloud.tencent.com/document/product/269/1612
      * @param     array $accounts [消息接收方 Identifier]
-     * @param     MsgBody $msg_body [TIM 消息]
+     * @param     \luoyy\Tim\Support\MsgBody $msg_body [TIM 消息]
      * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
-     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
+     * @param     \luoyy\Tim\Support\OfflinePushInfo|null $offline_push_info [离线推送信息配置]
      * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上 2：消息不同步至 From_Account；若不填写默认情况下会将消息存 From_Account 漫游]
      * @return    mixed [返回值]
      */
@@ -192,7 +194,7 @@ class TimManager extends Tim
      * @link      https://cloud.tencent.com/document/product/269/2568
      * @param     string $from_account [消息发送方 Identifier，用于指定发送消息方]
      * @param     string $to_account [消息接收方 Identifier]
-     * @param     MsgBody $msg_body [消息内容]
+     * @param     \luoyy\Tim\Support\MsgBody $msg_body [消息内容]
      * @param     int $sync_from_old_system [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
      * @return    mixed [返回值]
      */
@@ -251,6 +253,183 @@ class TimManager extends Tim
             'From_Account' => $from_account,
             'To_Account' => $to_account,
             'MsgKey' => $msg_key
+        ]);
+    }
+
+    /**
+     * 全员推送 all_member_push
+     */
+
+    /**
+     * [im_push 全员推送]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:11:47+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45934
+     * @param     string $from_account [消息推送方帐号]
+     * @param     \luoyy\Tim\Support\MsgBody $msg_body [消息内容，具体格式请参考 MsgBody 消息内容说明（一条消息可包括多种消息元素，所以 MsgBody 为 Array 类型）]
+     * @param     int|null $msg_life_time [消息离线存储时间，单位秒，最多保存7天（604800秒）。默认为0，表示不离线存储]
+     * @param     array|null $condition [Condition 共有4种条件类型，分别是： 属性的或条件 AttrsOr 属性的与条件 AttrsAnd 标签的或条件 TagsOr 标签的与条件 TagsAnd AttrsOr 和 AttrsAnd 可以并存，TagsOr 和 TagsAnd 也可以并存。但是标签和属性条件不能并存。如果没有 Condition，则推送给全部用户]
+     * @return    mixed [返回值]
+     */
+    public function im_push(string $from_account, MsgBody $msg_body, ?int $msg_life_time = null, ?array $condition = null)
+    {
+        return $this->api('all_member_push', 'im_push', [
+            'Condition' => $condition,
+            'MsgRandom' => mt_rand(0, 0xFFFFFFFF), // 消息随机数，由随机函数产生。用于推送任务去重。对于不同的推送请求，MsgRandom7 天之内不能重复，否则视为相同的推送任务（调用推送 API 返回失败的时候可以用相同的 MsgRandom 进行重试）
+            'MsgBody' => $msg_body->toArray(),
+            'MsgLifeTime' => $msg_life_time,
+            'From_Account' => $from_account
+        ]);
+    }
+
+    /**
+     * [im_set_attr_name 设置应用属性名称]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:17:24+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45935
+     * @param     array $attr_names [key-value key:数字键 string类型 表示第几个属性（“0”到“9”之间）,value:属性名 string类型 属性名最长不超过50字节。应用最多可以有10个推送属性（编号从0到9），用户自定义每个属性的含义]
+     * @return    mixed [返回值]
+     */
+    public function im_set_attr_name(array $attr_names)
+    {
+        return $this->api('all_member_push', 'im_set_attr_name', [
+            'AttrNames' => $attr_names
+        ]);
+    }
+
+    /**
+     * [im_get_attr_name 获取应用属性名称]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:21:08+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45936
+     * @return    mixed [返回值]
+     */
+    public function im_get_attr_name()
+    {
+        return $this->api('all_member_push', 'im_get_attr_name', [
+        ]);
+    }
+
+    /**
+     * [im_get_attr 获取用户属性]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:25:43+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45937
+     * @param     string ...$accounts [目标用户帐号列表]
+     * @return    mixed [返回值]
+     */
+    public function im_get_attr(string ...$accounts)
+    {
+        return $this->api('all_member_push', 'im_get_attr', [
+            'To_Account' => $accounts
+        ]);
+    }
+
+    /**
+     * [im_set_attr 设置用户属性]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:34:28+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45938
+     * @param     \luoyy\Tim\Support\UserAttrs $user_attrs [目标用户帐号, 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节]
+     * @return    mixed [返回值]
+     */
+    public function im_set_attr(UserAttrs ...$user_attrs)
+    {
+        return $this->api('all_member_push', 'im_set_attr', [
+            'UserAttrs' => array_map(function (UserAttrs $user_attr) {
+                return $user_attr->toArray();
+            }, $user_attrs)
+        ]);
+    }
+
+    /**
+     * [im_remove_attr 删除用户属性]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:37:56+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45939
+     * @param     \luoyy\Tim\Support\UserAttrs $user_attrs [目标用户帐号, 属性集合，注意这里只需要给出属性名即可；Attrs 形式及含义参见 设置应用属性名称 。]
+     * @return    mixed [返回值]
+     */
+    public function im_remove_attr(UserAttrs ...$user_attrs)
+    {
+        return $this->api('all_member_push', 'im_remove_attr', [
+            'UserAttrs' => array_map(function (UserAttrs $user_attr) {
+                return $user_attr->toArray();
+            }, $user_attrs)
+        ]);
+    }
+
+    /**
+     * [im_get_tag 获取用户属性]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:41:24+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45940
+     * @param     string ...$accounts [目标用户帐号列表]
+     * @return    mixed [返回值]
+     */
+    public function im_get_tag(string ...$accounts)
+    {
+        return $this->api('all_member_push', 'im_get_tag', [
+            'To_Account' => $accounts
+        ]);
+    }
+
+    /**
+     * [im_add_tag 添加用户标签]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:43:11+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45941
+     * @param     \luoyy\Tim\Support\UserTags $user_tags [目标用户帐号, 标签集合]
+     * @return    mixed [返回值]
+     */
+    public function im_add_tag(UserTags ...$user_tags)
+    {
+        return $this->api('all_member_push', 'im_add_tag', [
+            'UserTags' => array_map(function (UserTags $user_tag) {
+                return $user_tag->toArray();
+            }, $user_tags)
+        ]);
+    }
+
+    /**
+     * [im_remove_tag 删除用户标签]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:44:47+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45942
+     * @param     \luoyy\Tim\Support\UserTags $user_tags [目标用户帐号, 标签集合]
+     * @return    mixed [返回值]
+     */
+    public function im_remove_tag(UserTags ...$user_tags)
+    {
+        return $this->api('all_member_push', 'im_remove_tag', [
+            'UserTags' => array_map(function (UserTags $user_tag) {
+                return $user_tag->toArray();
+            }, $user_tags)
+        ]);
+    }
+
+    /**
+     * [im_remove_all_tags 删除用户所有标签]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T11:46:39+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45943
+     * @param     string ...$accounts [目标用户帐号列表]
+     * @return    mixed [返回值]
+     */
+    public function im_remove_all_tags(string ...$accounts)
+    {
+        return $this->api('all_member_push', 'im_remove_all_tags', [
+            'To_Account' => $accounts
         ]);
     }
 
@@ -838,10 +1017,10 @@ class TimManager extends Tim
      * @DateTime  2020-01-16T14:20:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @param     string $group_id [向哪个群组发送消息]
-     * @param     MsgBody $msg_body [消息体]
+     * @param     \luoyy\Tim\Support\MsgBody $msg_body [消息体]
      * @param     string|null $from_account [消息来源帐号]
      * @param     string|null $msg_priority [消息的优先级]
-     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
+     * @param     \luoyy\Tim\Support\OfflinePushInfo|null $offline_push_info [离线推送信息配置]
      * @param     array|null $forbid_callback_control [消息回调禁止开关]
      * @param     int|null $online_only_flag [1表示消息仅发送在线成员，默认0表示发送所有成员，音视频聊天室（AVChatRoom）和在线成员广播大群（BChatRoom）不支持该参数]
      * @return    mixed [返回值]
