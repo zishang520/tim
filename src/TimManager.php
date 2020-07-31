@@ -44,7 +44,7 @@ class TimManager extends Tim
      */
     public function multiaccount_import(string ...$accounts)
     {
-        return $this->api('im_open_login_svc', 'account_import', [
+        return $this->api('im_open_login_svc', 'multiaccount_import', [
             'Accounts' => $accounts
         ]);
     }
