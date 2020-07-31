@@ -438,29 +438,13 @@ class TimManager extends Tim
      */
 
     /**
-     * [portrait_get 拉取资料]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-15T16:48:07+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $accounts [需要拉取这些 Identifier 的资料]
-     * @param     array $tag_list [指定要拉取的资料字段的 Tag]
-     * @return    mixed [返回值]
-     */
-    public function portrait_get(array $accounts, array $tag_list)
-    {
-        return $this->api('profile', 'portrait_get', [
-            'To_Account' => array_map('strval', $accounts),
-            'TagList' => $tag_list
-        ]);
-    }
-
-    /**
      * [portrait_set 设置资料]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:01:27+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $from_account [需要设置该 Identifier 的资料]
-     * @param     array $profile_item [{ "Tag":"Tag_Profile_IM_Nick", "Value":"MyNickName" },{ "Tag":"Tag_Profile_IM_Nick", "Value":"MyNickName" }]
+     * @link      https://cloud.tencent.com/document/product/269/1640
+     * @param     string $from_account [需要设置该 UserID 的资料]
+     * @param     array $profile_item [待设置的用户的资料对象数组，数组中每一个对象都包含了 Tag 和 Value]
      * @return    mixed [返回值]
      */
     public function portrait_set(string $from_account, array $profile_item)
@@ -468,6 +452,24 @@ class TimManager extends Tim
         return $this->api('profile', 'portrait_set', [
             'From_Account' => $from_account,
             'ProfileItem' => $profile_item
+        ]);
+    }
+
+    /**
+     * [portrait_get 拉取资料]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-15T16:48:07+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1639
+     * @param     array $accounts [需要拉取这些 UserID 的资料； 注意：每次拉取的用户数不得超过100，避免因回包数据量太大以致回包失败]
+     * @param     array $tag_list [指定要拉取的资料字段的 Tag，支持的字段有： 1. 标配资料字段，详情可参见 标配资料字段 2. 自定义资料字段，详情可参见 自定义资料字段]
+     * @return    mixed [返回值]
+     */
+    public function portrait_get(array $accounts, array $tag_list)
+    {
+        return $this->api('profile', 'portrait_get', [
+            'To_Account' => array_map('strval', $accounts),
+            'TagList' => $tag_list
         ]);
     }
 
