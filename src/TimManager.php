@@ -115,15 +115,15 @@ class TimManager extends Tim
      * @DateTime  2020-01-15T16:31:44+0800
      * @copyright (c) ZiShang520 All Rights Reserved
      * @link      https://cloud.tencent.com/document/product/269/2566
-     * @param     int $is_need_detail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
-     * @param     string ...$accounts [需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态]
+     * @param     array $accounts [需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态]
+     * @param     int|null $is_need_detail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
      * @return    mixed [返回值]
      */
-    public function querystate(int $is_need_detail = 0, string ...$accounts)
+    public function querystate(array $accounts, ?int $is_need_detail = null)
     {
         return $this->api('openim', 'querystate', [
             'IsNeedDetail' => $is_need_detail,
-            'To_Account' => $accounts
+            'To_Account' => array_map('strval', $accounts)
         ]);
     }
 
@@ -478,13 +478,14 @@ class TimManager extends Tim
      */
 
     /**
-     * [friend_add description]
+     * [friend_add 添加好友]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:33:32+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1643
      * @param     string $from_account [需要为该 UserID 添加好友]
      * @param     array $add_friend_item [好友结构体对象]
-     * @param     string $add_type [加好友方式（默认双向加好友方式）]
+     * @param     string $add_type [加好友方式（默认双向加好友方式）： Add_Type_Single 表示单向加好友 Add_Type_Both 表示双向加好友]
      * @param     int $force_add_flags [管理员强制加好友标记：1表示强制加好友，0表示常规加好友方式]
      * @return    mixed [返回值]
      */
@@ -503,6 +504,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:40:05+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/8301
      * @param     string $from_account [需要为该 UserID 添加好友]
      * @param     array $add_friend_item [好友结构体对象]
      * @return    mixed [返回值]
@@ -516,12 +518,31 @@ class TimManager extends Tim
     }
 
     /**
+     * [friend_update 更新好友]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T12:39:42+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/12525
+     * @param     string $from_account [需要更新该 UserID 的关系链数据]
+     * @param     array $update_item [需要更新的好友对象数组]
+     * @return    mixed [返回值]
+     */
+    public function friend_update(string $from_account, array $update_item)
+    {
+        return $this->api('sns', 'friend_update', [
+            'From_Account' => $from_account,
+            'UpdateItem' => $update_item
+        ]);
+    }
+
+    /**
      * [friend_delete 删除好友]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:45:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $from_account [指定要清除好友数据的用户的 UserID]
-     * @param     array $accounts [返回值]
+     * @link      https://cloud.tencent.com/document/product/269/1644
+     * @param     string $from_account [需要删除该 UserID 的好友]
+     * @param     array $accounts [待删除的好友的 UserID 列表，单次请求的 To_Account 数不得超过1000]
      * @param     string|null $deletet_type [删除模式]
      * @return    mixed [返回值]
      */
@@ -539,8 +560,9 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:46:55+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1645
      * @param     string $from_account [指定要清除好友数据的用户的 UserID]
-     * @param     string|null $deletet_type [删除模式]
+     * @param     string|null $deletet_type [删除模式，默认删除单向好友]
      * @return    mixed [返回值]
      */
     public function friend_delete_all(string $from_account, ?string $deletet_type = null)
@@ -556,6 +578,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:48:46+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1646
      * @param     string $from_account [需要校验该 UserID 的好友]
      * @param     array $accounts [请求校验的好友的 UserID 列表，单次请求的 To_Account 数不得超过1000]
      * @param     string $check_type [校验模式]
@@ -575,13 +598,14 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:51:48+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1647
      * @param     string $from_account [指定要拉取好友数据的用户的 UserID]
      * @param     int $start_index [分页的起始位置]
-     * @param     int $standard_sequence [上次拉好友数据时返回的 StandardSequence，如果 StandardSequence 字段的值与后台一致，后台不会返回标配好友数据]
-     * @param     int $custom_sequence [上次拉好友数据时返回的 CustomSequence，如果 CustomSequence 字段的值与后台一致，后台不会返回自定义好友数据]
+     * @param     int|null $standard_sequence [上次拉好友数据时返回的 StandardSequence，如果 StandardSequence 字段的值与后台一致，后台不会返回标配好友数据]
+     * @param     int|null $custom_sequence [上次拉好友数据时返回的 CustomSequence，如果 CustomSequence 字段的值与后台一致，后台不会返回自定义好友数据]
      * @return    mixed [返回值]
      */
-    public function friend_get(string $from_account, int $start_index = 0, int $standard_sequence = 0, int $custom_sequence = 0)
+    public function friend_get(string $from_account, int $start_index = 0, ?int $standard_sequence = null, ?int $custom_sequence = null)
     {
         return $this->api('sns', 'friend_get', [
             'From_Account' => $from_account,
@@ -596,8 +620,9 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:54:21+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/8609
      * @param     string $from_account [指定要拉取好友数据的用户的 UserID]
-     * @param     array $accounts [好友的 UserID 列表]
+     * @param     array $accounts [好友的 UserID 列表 建议每次请求的好友数不超过100，避免因数据量太大导致回包失败]
      * @param     array $tag_list [指定要拉取的资料字段及好友字段]
      * @return    mixed [返回值]
      */
@@ -615,6 +640,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T17:58:54+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/3718
      * @param     string $from_account [请求为该 UserID 添加黑名单]
      * @param     array $accounts [待添加为黑名单的用户 UserID 列表，单次请求的 To_Account 数不得超过1000]
      * @return    mixed [返回值]
@@ -632,6 +658,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T18:01:34+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/3719
      * @param     string $from_account [需要删除该 UserID 的黑名单]
      * @param     array $accounts [待添加为黑名单的用户 UserID 列表，单次请求的 To_Account 数不得超过1000]
      * @return    mixed [返回值]
@@ -649,6 +676,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T18:03:17+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/3722
      * @param     string $from_account [需要拉取该 UserID 的黑名单]
      * @param     int $start_index [拉取的起始位置]
      * @param     int $max_limited [每页最多拉取的黑名单数]
@@ -670,6 +698,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T18:04:58+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/3725
      * @param     string $from_account [需要校验该 UserID 的黑名单]
      * @param     array $accounts [待校验的黑名单的 UserID 列表，单次请求的 To_Account 数不得超过1000]
      * @param     string $check_type [校验模式]
@@ -689,6 +718,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T18:15:37+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/10107
      * @param     string $from_account [需要为该 UserID 添加新分组]
      * @param     array $group_name [新增分组列表]
      * @param     array|null $accounts [需要加入新增分组的好友的 UserID 列表]
@@ -708,6 +738,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T18:16:28+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/10108
      * @param     string $from_account [需要删除该 UserID 的分组]
      * @param     array $group_name [要删除的分组列表]
      * @return    mixed [返回值]
