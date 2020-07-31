@@ -20,12 +20,13 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:13:22+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1608
      * @param     string $identifier [用户名，长度不超过32字节]
-     * @param     string $nick [用户昵称]
-     * @param     string $face_url [用户头像 URL]
+     * @param     string|null $nick [用户昵称]
+     * @param     string|null $face_url [用户头像 URL]
      * @return    mixed [返回值]
      */
-    public function account_import(string $identifier, string $nick, string $face_url)
+    public function account_import(string $identifier, ?string $nick = null, ?string $face_url = null)
     {
         return $this->api('im_open_login_svc', 'account_import', [
             'Identifier' => $identifier,
@@ -39,6 +40,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:13:05+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/4919
      * @param     string ...$accounts [用户名，单个用户名长度不超过32字节，单次最多导入100个用户名]
      * @return    mixed [返回值]
      */
@@ -54,7 +56,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:18:39+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string ...$user_ids [ids]
+     * @link      https://cloud.tencent.com/document/product/269/36443
+     * @param     string ...$user_ids [请求删除的帐号的 UserID, 单次请求最多支持100个帐号]
      * @return    mixed [返回值]
      */
     public function account_delete(string ...$user_ids)
@@ -71,7 +74,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:28:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string ...$user_ids [ids]
+     * @link      https://cloud.tencent.com/document/product/269/38417
+     * @param     string ...$user_ids [请求检查的帐号的 UserID, 单次请求最多支持100个帐号]
      * @return    mixed [返回值]
      */
     public function account_check(string ...$user_ids)
@@ -88,6 +92,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:30:25+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/3853
      * @param     string $identifier [用户名]
      * @return    mixed [返回值]
      */
@@ -107,13 +112,145 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T16:31:44+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2566
+     * @param     int $is_need_detail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
      * @param     string ...$accounts [需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态]
      * @return    mixed [返回值]
      */
-    public function querystate(string ...$accounts)
+    public function querystate(int $is_need_detail = 0, string ...$accounts)
     {
         return $this->api('openim', 'querystate', [
+            'IsNeedDetail' => $is_need_detail,
             'To_Account' => $accounts
+        ]);
+    }
+
+    /**
+     * 单聊消息 openim
+     */
+
+    /**
+     * [sendmsg 单发单聊消息]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T10:28:47+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2282
+     * @param     string $to_account [消息接收方 UserID]
+     * @param     MsgBody $msg_body [消息内容，具体格式请参考 消息格式描述（注意，一条消息可包括多种消息元素，MsgBody 为 Array 类型）]
+     * @param     string|null $from_account [消息发送方 UserID（用于指定发送消息方帐号）]
+     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置，具体可参考 消息格式描述]
+     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
+     * @param     int|null $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒） 若设置该字段为0，则消息只发在线用户，不保存离线 若设置该字段超过7天（604800秒），仍只保存7天 若不设置该字段，则默认保存7天]
+     * @param     array|null $forbid_callback_control [消息回调禁止开关，只对本条消息有效，ForbidBeforeSendMsgCallback 表示禁止发消息前回调，ForbidAfterSendMsgCallback 表示禁止发消息后回调]
+     * @return    mixed [返回值]
+     */
+    public function sendmsg(string $to_account, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null, ?int $msg_life_time = null, ?array $forbid_callback_control = null)
+    {
+        return $this->api('openim', 'sendmsg', [
+            'SyncOtherMachine' => $sync_other_machine,
+            'From_Account' => $from_account,
+            'To_Account' => $to_account,
+            'MsgLifeTime' => $msg_life_time,
+            'MsgRandom' => mt_rand(0, 0xFFFFFFFF), // 消息随机数，由随机函数产生，用于后台定位问题
+            'MsgTimeStamp' => time(), // 消息时间戳，UNIX 时间戳（单位：秒）
+            'ForbidCallbackControl' => $forbid_callback_control,
+            'MsgBody' => $msg_body->toArray(),
+            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
+        ]);
+    }
+
+    /**
+     * [batchsendmsg 批量发单聊消息]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T10:32:34+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1612
+     * @param     array $accounts [消息接收方 Identifier]
+     * @param     MsgBody $msg_body [TIM 消息]
+     * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
+     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
+     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上 2：消息不同步至 From_Account；若不填写默认情况下会将消息存 From_Account 漫游]
+     * @return    mixed [返回值]
+     */
+    public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null)
+    {
+        return $this->api('openim', 'batchsendmsg', [
+            'SyncOtherMachine' => $sync_other_machine,
+            'From_Account' => $from_account,
+            'To_Account' => array_map('strval', $accounts),
+            'MsgRandom' => mt_rand(0, 0xFFFFFFFF),
+            'MsgBody' => $msg_body->toArray(),
+            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
+        ]);
+    }
+
+    /**
+     * [importmsg 导入单聊消息]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T10:36:30+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2568
+     * @param     string $from_account [消息发送方 Identifier，用于指定发送消息方]
+     * @param     string $to_account [消息接收方 Identifier]
+     * @param     MsgBody $msg_body [消息内容]
+     * @param     int $sync_from_old_system [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
+     * @return    mixed [返回值]
+     */
+    public function importmsg(string $from_account, string $to_account, MsgBody $msg_body, int $sync_from_old_system = 2)
+    {
+        return $this->api('openim', 'importmsg', [
+            'SyncFromOldSystem' => $sync_from_old_system,
+            'From_Account' => $from_account,
+            'To_Account' => $to_account,
+            'MsgRandom' => mt_rand(0, 0xFFFFFFFF),
+            'MsgTimeStamp' => time(),
+            'MsgBody' => $msg_body->toArray()
+        ]);
+    }
+
+    /**
+     * [admin_getroammsg 查询单聊消息]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T10:54:18+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/42794
+     * @param     string $from_account [会话其中一方的 UserID，若已指定发送消息方帐号，则为消息发送方]
+     * @param     string $to_account [会话其中一方的 UserID]
+     * @param     int $max_cnt [请求的消息条数]
+     * @param     int $min_time [请求的消息时间范围的最小值]
+     * @param     int $max_time [请求的消息时间范围的最大值]
+     * @param     string|null $last_msg_key [上一次拉取到的最后一条消息的 MsgKey，续拉时需要填该字段，填写方法见上方 示例]
+     * @return    mixed [返回值]
+     */
+    public function admin_getroammsg(string $from_account, string $to_account, int $max_cnt, int $min_time, int $max_time, ?string $last_msg_key = null)
+    {
+        return $this->api('openim', 'admin_getroammsg', [
+            'From_Account' => $from_account,
+            'To_Account' => $to_account,
+            'MaxCnt' => $max_cnt,
+            'MinTime' => $min_time,
+            'MaxTime' => $max_time,
+            'LastMsgKey' => $last_msg_key
+        ]);
+    }
+
+    /**
+     * [admin_msgwithdraw 撤回单聊消息]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T10:39:34+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/38980
+     * @param     string $from_account [消息发送方 UserID]
+     * @param     string $to_account [消息接收方 UserID]
+     * @param     string $msg_key [待撤回消息的唯一标识。该字段由 REST API 接口 单发单聊消息 和 批量发单聊消息 返回]
+     * @return    mixed [返回值]
+     */
+    public function admin_msgwithdraw(string $from_account, string $to_account, string $msg_key)
+    {
+        return $this->api('openim', 'admin_msgwithdraw', [
+            'From_Account' => $from_account,
+            'To_Account' => $to_account,
+            'MsgKey' => $msg_key
         ]);
     }
 
@@ -399,103 +536,6 @@ class TimManager extends Tim
         return $this->api('sns', 'group_delete', [
             'From_Account' => $from_account,
             'GroupName' => array_map('strval', $group_name)
-        ]);
-    }
-
-    /**
-     * 单聊消息 openim
-     */
-
-    /**
-     * [sendmsg 单发单聊消息]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T10:28:47+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $to_account [消息接收方 Identifier]
-     * @param     MsgBody $msg_body [消息内容]
-     * @param     string|null $from_account [消息发送方 Identifier（用于指定发送消息方帐号）]
-     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
-     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上； 2：消息不同步至 From_Account； 若不填写默认情况下会将消息存 From_Account 漫游]
-     * @param     int|null $msg_life_time [消息离线保存时长（单位：秒），最长为7天（604800秒）]
-     * @return    mixed [返回值]
-     */
-    public function sendmsg(string $to_account, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null, ?int $msg_life_time = null)
-    {
-        return $this->api('openim', 'sendmsg', [
-            'SyncOtherMachine' => $sync_other_machine,
-            'From_Account' => $from_account,
-            'To_Account' => $to_account,
-            'MsgLifeTime' => $msg_life_time,
-            'MsgRandom' => mt_rand(0, 4294967295),
-            'MsgTimeStamp' => time(),
-            'MsgBody' => $msg_body->toArray(),
-            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
-        ]);
-    }
-
-    /**
-     * [batchsendmsg 批量发单聊消息]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T10:32:34+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     array $accounts [消息接收方 Identifier]
-     * @param     MsgBody $msg_body [TIM 消息]
-     * @param     string|null $from_account [消息发送方 Identifier，用于指定发送消息方]
-     * @param     OfflinePushInfo|null $offline_push_info [离线推送信息配置]
-     * @param     int|null $sync_other_machine [1：把消息同步到 From_Account 在线终端和漫游上 2：消息不同步至 From_Account；若不填写默认情况下会将消息存 From_Account 漫游]
-     * @return    mixed [返回值]
-     */
-    public function batchsendmsg(array $accounts, MsgBody $msg_body, ?string $from_account = null, ?OfflinePushInfo $offline_push_info = null, ?int $sync_other_machine = null)
-    {
-        return $this->api('openim', 'batchsendmsg', [
-            'SyncOtherMachine' => $sync_other_machine,
-            'From_Account' => $from_account,
-            'To_Account' => array_map('strval', $accounts),
-            'MsgRandom' => mt_rand(0, 4294967295),
-            'MsgBody' => $msg_body->toArray(),
-            'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
-        ]);
-    }
-
-    /**
-     * [importmsg 导入单聊消息]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T10:36:30+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $from_account [消息发送方 Identifier，用于指定发送消息方]
-     * @param     string $to_account [消息接收方 Identifier]
-     * @param     MsgBody $msg_body [消息内容]
-     * @param     int $sync_from_old_system [该字段只能填1或2，其他值是非法值 1表示实时消息导入，消息加入未读计数 2表示历史消息导入，消息不计入未读]
-     * @return    mixed [返回值]
-     */
-    public function importmsg(string $from_account, string $to_account, MsgBody $msg_body, int $sync_from_old_system = 2)
-    {
-        return $this->api('openim', 'importmsg', [
-            'SyncFromOldSystem' => $sync_from_old_system,
-            'From_Account' => $from_account,
-            'To_Account' => $to_account,
-            'MsgRandom' => mt_rand(0, 4294967295),
-            'MsgTimeStamp' => time(),
-            'MsgBody' => $msg_body->toArray()
-        ]);
-    }
-
-    /**
-     * [admin_msgwithdraw 撤回单聊消息]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T10:39:34+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string $from_account [消息发送方 UserID]
-     * @param     string $to_account [消息接收方 UserID]
-     * @param     string $msg_key [待撤回消息的唯一标识。该字段由 REST API 接口 单发单聊消息 和 批量发单聊消息 返回]
-     * @return    mixed [返回值]
-     */
-    public function admin_msgwithdraw(string $from_account, string $to_account, string $msg_key)
-    {
-        return $this->api('openim', 'admin_msgwithdraw', [
-            'From_Account' => $from_account,
-            'To_Account' => $to_account,
-            'MsgKey' => $msg_key
         ]);
     }
 
@@ -810,7 +850,7 @@ class TimManager extends Tim
     {
         return $this->api('group_open_http_svc', 'send_group_msg', [
             'GroupId' => $group_id,
-            'Random' => mt_rand(0, 4294967295),
+            'Random' => mt_rand(0, 0xFFFFFFFF),
             'MsgPriority' => $msg_priority,
             'MsgBody' => $msg_body->toArray(),
             'From_Account' => $from_account,
