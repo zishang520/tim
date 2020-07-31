@@ -798,6 +798,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:20:58+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1616
      * @param     array $group_id_list [需要拉取的群组列表]
      * @param     array|null $response_filter [包含三个过滤器：GroupBaseInfoFilter，MemberInfoFilter，AppDefinedDataFilter_Group，分别是基础信息字段过滤器，成员信息字段过滤器，群组维度的自定义字段过滤器]
      * @return    mixed [返回值]
@@ -815,6 +816,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:30:55+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1617
      * @param     string $group_id [需要拉取成员信息的群组的 ID]
      * @param     int|null $limit [一次最多获取多少个成员的资料，不得超过10000。如果不填，则获取群内全部成员的信息]
      * @param     int|null $offset [从第几个成员开始获取，如果不填则默认为0，表示从第一个成员开始获取]
@@ -840,6 +842,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:40:53+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1620
      * @param     string $group_id [需要修改基础信息的群组的 ID]
      * @param     string|null $name [群名称，最长30字节]
      * @param     string|null $introduction [群简介，最长240字节]
@@ -869,12 +872,13 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:54:53+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1621
      * @param     string $group_id [操作的群 ID]
      * @param     array $member_list [待添加的群成员数组]
-     * @param     int $silence [是否静默加人。0：非静默加人；1：静默加人。不填该字段默认为0]
+     * @param     int|null $silence [是否静默加人。0：非静默加人；1：静默加人。不填该字段默认为0]
      * @return    mixed [返回值]
      */
-    public function add_group_member(string $group_id, array $member_list, int $silence = 0)
+    public function add_group_member(string $group_id, array $member_list, ?int $silence = null)
     {
         return $this->api('group_open_http_svc', 'add_group_member', [
             'GroupId' => $group_id,
@@ -890,13 +894,15 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:58:25+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1622
+     * @desc      AVChatRoom（直播群）不支持删除群成员，对这种类型的群组进行操作时会返回10004错误。如果管理员希望达到删除群成员的效果，可以通过设置 批量禁言和取消禁言 的方式实现。
      * @param     string $group_id [操作的群 ID]
      * @param     array $member_todel_account [待删除的群成员]
      * @param     string|null $reason [踢出用户原因]
-     * @param     int $silence [是否静默删人。0表示非静默删人，1表示静默删人。静默即删除成员时不通知群里所有成员，只通知被删除群成员。不填写该字段时默认为0]
+     * @param     int|null $silence [是否静默删人。0表示非静默删人，1表示静默删人。静默即删除成员时不通知群里所有成员，只通知被删除群成员。不填写该字段时默认为0]
      * @return    mixed [返回值]
      */
-    public function delete_group_member(string $group_id, array $member_todel_account, ?string $reason = null, int $silence = 0)
+    public function delete_group_member(string $group_id, array $member_todel_account, ?string $reason = null, ?int $silence = null)
     {
         return $this->api('group_open_http_svc', 'delete_group_member', [
             'GroupId' => $group_id,
@@ -911,6 +917,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:03:31+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1623
+     * @desc      AVChatRoom（直播群）因为内部实现的问题，只能修改管理员和群主的成员资料，修改普通成员资料时会返回10007错误。
      * @param     string $group_id [操作的群 ID]
      * @param     string $member_account [要操作的群成员]
      * @param     int|null $shut_up_time [需禁言时间，单位为秒，0表示取消禁言]
@@ -928,8 +936,8 @@ class TimManager extends Tim
             'Role' => $role,
             'MsgFlag' => $msg_flag,
             'NameCard' => $name_card,
-            'ShutUpTime' => $shut_up_time,
-            'AppMemberDefinedData' => $app_member_defined_data
+            'AppMemberDefinedData' => $app_member_defined_data,
+            'ShutUpTime' => $shut_up_time
         ]);
     }
 
@@ -938,6 +946,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:07:09+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1624
      * @param     string $group_id [操作的群 ID]
      * @return    mixed [返回值]
      */
@@ -953,16 +962,17 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:18:47+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1625
      * @param     string $member_account [需要查询的用户帐号]
-     * @param     int $with_huge_groups [是否获取用户加入的音视频聊天室和在线成员广播大群，0表示不获取，1表示获取。默认为0]
-     * @param     int $with_no_active_groups [是否获取用户加入的未激活私有群信息，0表示不获取，1表示获取。默认为0]
+     * @param     int|null $with_huge_groups [是否获取用户加入的音视频聊天室和在线成员广播大群，0表示不获取，1表示获取。默认为0]
+     * @param     int|null $with_no_active_groups [是否获取用户加入的未激活私有群信息，0表示不获取，1表示获取。默认为0]
      * @param     string|null $group_type [拉取哪种群组形态，例如 Private，Public，ChatRoom 或 AVChatRoom，不填为拉取所有]
      * @param     int|null $limit [单次拉取的群组数量，如果不填代表所有群组，分页方式与 获取 App 中的所有群组 相同]
      * @param     int|null $offset [从第多少个群组开始拉取，分页方式与 获取 App 中的所有群组 相同]
      * @param     array|null $response_filter [分别包含 GroupBaseInfoFilter 和 SelfInfoFilter 两个过滤器； GroupBaseInfoFilter 表示需要拉取哪些基础信息字段，详情请参阅 群组系统；SelfInfoFilter 表示需要拉取用户在每个群组中的哪些个人资料，详情请参阅 群组系统]
      * @return    mixed [返回值]
      */
-    public function get_joined_group_list(string $member_account, int $with_huge_groups = 0, int $with_no_active_groups = 0, ?string $group_type = null, ?int $limit = null, ?int $offset = null, ?array $response_filter = null)
+    public function get_joined_group_list(string $member_account, ?int $with_huge_groups = null, ?int $with_no_active_groups = null, ?string $group_type = null, ?int $limit = null, ?int $offset = null, ?array $response_filter = null)
     {
         return $this->api('group_open_http_svc', 'get_joined_group_list', [
             'Member_Account' => $member_account,
@@ -980,6 +990,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:27:27+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1626
+     * @desc      AVChatRoom（直播群）不支持该接口，对此类型群组进行操作将返回10007错误；但可以通过 获取群组成员详细资料 达到查询“成员角色”的效果。
      * @param     string $group_id [需要查询的群组 ID]
      * @param     array $user_account [表示需要查询的用户帐号，最多支持500个帐号]
      * @return    mixed [返回值]
@@ -997,6 +1009,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:39:31+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1627
+     * @desc      私有群不支持禁言。在线成员广播大群只有 App 管理员可以发送消息，所以无需支持设置和取消禁言。
      * @param     string $group_id [需要查询的群组 ID]
      * @param     array $members_account [需要禁言的用户帐号，最多支持500个帐号]
      * @param     int $shut_up_time [需禁言时间，单位为秒，为0时表示取消禁言]
@@ -1016,6 +1030,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T12:52:09+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2925
      * @param     string $group_id [需要获取被禁言成员列表的群组 ID。]
      * @return    mixed [返回值]
      */
@@ -1031,6 +1046,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:20:29+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1629
      * @param     string $group_id [向哪个群组发送消息]
      * @param     \luoyy\Tim\Support\MsgBody $msg_body [消息体]
      * @param     string|null $from_account [消息来源帐号]
@@ -1059,6 +1075,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:26:52+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1630
+     * @desc      非直播群支持向群组中的一部分指定成员发送系统通知，而 AVChatRoom（直播群）只支持向群组中所有成员发送系统通知。
      * @param     string $group_id [向哪个群组发送系统通知]
      * @param     string $content [系统通知的内容]
      * @param     array|null $to_members_account [接收者群成员列表，不填或为空表示全员下发]
@@ -1078,6 +1096,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:39:00+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/12341
      * @param     string $group_id [操作的群 ID]
      * @param     array $msg_seq_list [被撤回的消息 seq 列表，一次请求最多可以撤回10条消息 seq]
      * @return    mixed [返回值]
@@ -1097,6 +1116,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:46:24+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1633
      * @param     string $group_id [要被转移的群组 ID]
      * @param     string $new_owner_account [新群主 ID]
      * @return    mixed [返回值]
@@ -1114,6 +1134,8 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:52:13+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1634
+     * @desc      音视频聊天室和在线成员广播大群不支持导入群基础资料，对这两种类型的群组进行操作时会返回 10007 错误；如果需要达到导入群组基础资料的效果，可以通过 创建群组 和 修改群组基础资料 的方式实现。
      * @param     string $name [群名称，最长30字节]
      * @param     string $type [群组形态，包括 Public（公开群），Private（私密群）， ChatRoom（聊天室）]
      * @param     string|null $owner_account [群主 ID，自动添加到群成员中。如果不填，群没有群主]
@@ -1145,10 +1167,11 @@ class TimManager extends Tim
     }
 
     /**
-     * [import_group_msg description]
+     * [import_group_msg 导入群消息]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:57:00+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1635
      * @param     string $group_id [要导入消息的群 ID]
      * @param     array $msg_list [导入的消息列表]
      * @return    mixed [返回值]
@@ -1162,10 +1185,11 @@ class TimManager extends Tim
     }
 
     /**
-     * [import_group_member description]
+     * [import_group_member 导入群成员]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T14:59:42+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1636
      * @param     string $group_id [操作的群 ID]
      * @param     array $member_list [待添加的群成员数组]
      * @return    mixed [返回值]
@@ -1183,6 +1207,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:06:55+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1637
      * @param     string $group_id [操作的群 ID]
      * @param     string $member_account [要操作的群成员]
      * @param     int $unread_msg_num [成员未读消息数]
@@ -1201,6 +1226,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:08:09+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2359
      * @param     string $group_id [要删除消息的群 ID]
      * @param     string $sender_account [被删除消息的发送者 ID]
      * @return    mixed [返回值]
@@ -1218,6 +1244,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:19:24+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/2359
      * @param     string $group_id [要拉取漫游消息的群组 ID]
      * @param     int $req_msg_number [拉取的漫游消息的条数，目前一次请求最多返回20条漫游消息，所以这里最好小于等于20]
      * @param     int|null $req_msg_seq [拉取消息的最大 seq]
