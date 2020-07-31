@@ -1268,6 +1268,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:27:53+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/4230
      * @param     string $set_account [设置禁言配置的帐号]
      * @param     int|null $c2cmsg_nospeaking_time [单聊消息禁言时间，单位为秒，非负整数，最大值为4294967295（十六进制 0xFFFFFFFF）。等于0代表取消帐号禁言；等于最大值4294967295（十六进制 0xFFFFFFFF）代表帐号被设置永久禁言；其它代表该帐号禁言时间]
      * @param     int|null $groupmsg_nospeaking_time [群组消息禁言时间，单位为秒，非负整数，最大值为4294967295（十六进制 0xFFFFFFFF）。等于0代表取消帐号禁言；最大值4294967295（十六进制 0xFFFFFFFF）代表帐号被设置永久禁言；其它代表该帐号禁言时间]
@@ -1287,6 +1288,7 @@ class TimManager extends Tim
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:33:52+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/4229
      * @param     string $get_account [查询禁言信息的帐号]
      * @return    mixed [返回值]
      */
@@ -1298,14 +1300,31 @@ class TimManager extends Tim
     }
 
     /**
-     * 运营管理 open_msg_svc getappinfo
+     * 运营管理 openconfigsvr open_msg_svc ConfigSvc
      */
+
+    /**
+     * [getappinfo 拉取运营数据]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T15:37:12+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/4193
+     * @param     string ...$request_field [该字段用来指定需要拉取的运营数据，不填默认拉取所有字段。详细可参阅下文可拉取的运营字段]
+     * @return    mixed [返回值]
+     */
+    public function getappinfo(string ...$request_field)
+    {
+        return $this->api('openconfigsvr', 'getappinfo', [
+            'RequestField' => $request_field ?: null
+        ]);
+    }
 
     /**
      * [get_history 下载消息记录]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T15:36:11+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1650
      * @param     string $chat_type [消息类型，C2C 表示单发消息 Group 表示群组消息]
      * @param     string $msg_time [需要下载的消息记录的时间段，2015120121表示获取2015年12月1日21:00 - 21:59的消息的下载地址。该字段需精确到小时。每次请求只能获取某天某小时的所有单发或群组消息记录]
      * @return    mixed [返回值]
@@ -1319,17 +1338,17 @@ class TimManager extends Tim
     }
 
     /**
-     * [getappinfo 拉取运营数据]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T15:37:12+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     string ...$request_field [该字段用来指定需要拉取的运营数据，不填默认拉取所有字段。详细可参阅下文可拉取的运营字段]
+     * [get_ip_list 获取服务器 IP 地址]
+     * @Author    zishang520
+     * @DateTime  2020-07-31T13:35:00+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/45438
      * @return    mixed [返回值]
      */
-    public function getappinfo(string ...$request_field)
+    public function get_ip_list()
     {
-        return $this->api('openconfigsvr', 'getappinfo', [
-            'RequestField' => $request_field
+        return $this->api('ConfigSvc', 'GetIPList', [
         ]);
     }
+
 }
