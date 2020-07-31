@@ -756,29 +756,11 @@ class TimManager extends Tim
      */
 
     /**
-     * [get_appid_group_list description]
-     * @Author    ZiShang520@gmail.com
-     * @DateTime  2020-01-16T10:41:50+0800
-     * @copyright (c) ZiShang520 All Rights Reserved
-     * @param     int|null $limit [本次获取的群组 ID 数量的上限，不得超过 10000。如果不填，默认为最大值 10000]
-     * @param     int|null $next [群太多时分页拉取标志，第一次填0，以后填上一次返回的值，返回的 Next 为0代表拉完了]
-     * @param     string|null $group_type [如果仅需要返回特定群组形态的群组，可以通过 GroupType 进行过滤，但此时返回的 TotalCount 的含义就变成了 App 中属于该群组形态的群组总数。不填为获取所有类型的群组。 群组形态包括 Public（公开群），Private（私密群），ChatRoom（聊天室），AVChatRoom（音视频聊天室）和 BChatRoom（在线成员广播大群）]
-     * @return    mixed [返回值]
-     */
-    public function get_appid_group_list(?int $limit = null, ?int $next = null, ?string $group_type = null)
-    {
-        return $this->api('group_open_http_svc', 'get_appid_group_list', [
-            'Limit' => $limit,
-            'Next' => $next,
-            'GroupType' => $group_type
-        ]);
-    }
-
-    /**
      * [create_group 创建群组]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-16T11:07:48+0800
      * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1615
      * @param     string $name [群名称，最长30字节，使用 UIT-8 编码，1个汉字占3个字节]
      * @param     string $type [群组形态，包括 Public（公开群），Private（私密群），ChatRoom（聊天室），AVChatRoom（音视频聊天室），BChatRoom（在线成员广播大群）]
      * @param     string|null $owner_account [群主 ID，自动添加到群成员中。如果不填，群没有群主]
