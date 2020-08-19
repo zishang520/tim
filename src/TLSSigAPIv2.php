@@ -23,12 +23,12 @@ class TLSSigAPIv2
      */
     private function base64_url_encode($string)
     {
-        static $replace = array('+' => '*', '/' => '-', '=' => '_');
+        static $replace = ['+' => '*', '/' => '-', '=' => '_'];
         $base64 = base64_encode($string);
         if ($base64 === false) {
             throw new Exception('base64_encode error');
         }
-        return str_replace(array_keys($replace), array_values($replace), $base64);
+        return strtr($base64, $replace);
     }
 
     /**
@@ -40,9 +40,8 @@ class TLSSigAPIv2
      */
     private function base64_url_decode($base64)
     {
-        static $replace = array('+' => '*', '/' => '-', '=' => '_');
-        $string = str_replace(array_values($replace), array_keys($replace), $base64);
-        $result = base64_decode($string);
+        static $replace = ['*' => '+', '-' => '/', '_' => '='];
+        $result = base64_decode(strtr($base64, $replace));
         if ($result == false) {
             throw new Exception('base64_url_decode error');
         }
@@ -83,13 +82,13 @@ class TLSSigAPIv2
     private function __genSig($identifier, $expire, $userbuf, $userbuf_enabled)
     {
         $curr_time = time();
-        $sig_array = array(
+        $sig_array = [
             'TLS.ver' => '2.0',
             'TLS.identifier' => strval($identifier),
             'TLS.sdkappid' => intval($this->sdkappid),
             'TLS.expire' => intval($expire),
             'TLS.time' => intval($curr_time)
-        );
+        ];
 
         $base64_userbuf = '';
         if (true == $userbuf_enabled) {

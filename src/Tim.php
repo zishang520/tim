@@ -47,7 +47,7 @@ class Tim
         if (is_null($this->TLS)) {
             switch ($this->config->get('tls')) {
                 case 'v1':
-                    $this->TLS = new TLSSigAPI($this->config->get('sdkappid'), sprintf("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", wordwrap($this->config->get('public_key'), 64, "\n", true)), sprintf("-----BEGIN PRIVATE KEY-----\n%s\n-----END PRIVATE KEY-----\n", wordwrap($this->config->get('private_key'), 64, "\n", true)));
+                    $this->TLS = new TLSSigAPI($this->config->get('sdkappid'), sprintf("-----BEGIN PRIVATE KEY-----\n%s\n-----END PRIVATE KEY-----\n", wordwrap($this->config->get('private_key'), 64, "\n", true)), sprintf("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", wordwrap($this->config->get('public_key'), 64, "\n", true)));
                     break;
                 case 'v2':
                 default:

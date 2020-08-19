@@ -9,7 +9,7 @@ class TLSSigAPI
     private $public_key = false;
     private $appid = 0;
 
-    public function __construct($appid, $public_key, $private_key)
+    public function __construct($appid, $private_key, $public_key)
     {
         $this->appid = $appid;
         $this->private_key = openssl_pkey_get_private($private_key);
@@ -67,25 +67,24 @@ class TLSSigAPI
      */
     private function base64Encode($string)
     {
-        static $replace = array('+' => '*', '/' => '-', '=' => '_');
+        static $replace = ['+' => '*', '/' => '-', '=' => '_'];
         $base64 = base64_encode($string);
         if ($base64 === false) {
             throw new Exception('base64_encode error');
         }
-        return str_replace(array_keys($replace), array_values($replace), $base64);
+        return strtr($base64, $replace);
     }
 
     /**
      * 用于url的base64decode
-     * '+' => '*', '/' => '-', '=' => '_'
+     * '*' => '+', '-' => '/', '_' => '='
      * @param string $base64 需要解码的base64串
      * @return string 解码后的数据，失败返回false
      */
     private function base64Decode($base64)
     {
-        static $replace = array('+' => '*', '/' => '-', '=' => '_');
-        $string = str_replace(array_values($replace), array_keys($replace), $base64);
-        $result = base64_decode($string);
+        static $replace = ['*' => '+', '-' => '/', '_' => '='];
+        $result = base64_decode(strtr($base64, $replace));
         if ($result == false) {
             throw new Exception('base64_decode error');
         }
@@ -105,13 +104,13 @@ class TLSSigAPI
         if (isset($json[$aid3rd])) {
             $content .= "{$aid3rd}:{$json[$aid3rd]}\n";
         }
-        static $members = array(
+        static $members = [
             'TLS.account_type',
             'TLS.identifier',
             'TLS.sdk_appid',
             'TLS.time',
             'TLS.expire_after'
-        );
+        ];
         foreach ($members as $member) {
             if (!isset($json[$member])) {
                 throw new Exception('json need ' . $member);
@@ -158,7 +157,7 @@ class TLSSigAPI
      */
     public function genSig($identifier, $expire = 15552000)
     {
-        $json = array(
+        $json = [
             'TLS.account_type' => '0',
             'TLS.identifier' => (string) $identifier,
             'TLS.appid_at_3rd' => '0',
@@ -166,7 +165,7 @@ class TLSSigAPI
             'TLS.expire_after' => (string) $expire,
             'TLS.version' => '201512300000',
             'TLS.time' => (string) time()
-        );
+        ];
         $err = '';
         $content = $this->genSignContent($json, $err);
         $signature = $this->sign($content, $err);
@@ -239,7 +238,7 @@ class TLSSigAPI
      */
     private function genSignContentWithUserbuf(array $json)
     {
-        static $members = array(
+        static $members = [
             'TLS.appid_at_3rd',
             'TLS.account_type',
             'TLS.identifier',
@@ -247,7 +246,7 @@ class TLSSigAPI
             'TLS.time',
             'TLS.expire_after',
             'TLS.userbuf'
-        );
+        ];
         $content = '';
         foreach ($members as $member) {
             if (!isset($json[$member])) {
@@ -266,7 +265,7 @@ class TLSSigAPI
      */
     public function genSigWithUserbuf($identifier, $userbuf, $expire = 15552000)
     {
-        $json = array(
+        $json = [
             'TLS.account_type' => '0',
             'TLS.identifier' => (string) $identifier,
             'TLS.appid_at_3rd' => '0',
@@ -275,7 +274,7 @@ class TLSSigAPI
             'TLS.version' => '201512300000',
             'TLS.time' => (string) time(),
             'TLS.userbuf' => base64_encode($userbuf)
-        );
+        ];
         $err = '';
         $content = $this->genSignContentWithUserbuf($json, $err);
         $signature = $this->sign($content, $err);
