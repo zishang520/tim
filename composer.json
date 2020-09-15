@@ -3,7 +3,7 @@
     "description": "Tencent Cloud IM",
     "require": {
         "php": ">=7.0.0",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
         "league/flysystem": "^1.0.34"
     },
     "authors": [{
