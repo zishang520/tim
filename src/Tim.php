@@ -189,7 +189,7 @@ class Tim
             'sdkappid' => $this->config->get('sdkappid'),
             'identifier' => $this->config->get('identifier'),
             'usersig' => $this->genSig($this->config->get('identifier')),
-            'random' => mt_rand(0, 0xFFFFFFFF),
+            'random' => mt_rand(0, mt_getrandmax()),
             'contenttype' => self::CONTENTTYPE
         ]);
 

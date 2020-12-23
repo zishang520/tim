@@ -171,7 +171,7 @@ class TimManager extends Tim
             'From_Account' => $from_account,
             'To_Account' => $to_account,
             'MsgLifeTime' => $msg_life_time,
-            'MsgRandom' => mt_rand(0, 0xFFFFFFFF), // 消息随机数，由随机函数产生，用于后台定位问题
+            'MsgRandom' => mt_rand(0, mt_getrandmax()), // 消息随机数，由随机函数产生，用于后台定位问题
             'MsgTimeStamp' => time(), // 消息时间戳，UNIX 时间戳（单位：秒）
             'ForbidCallbackControl' => $forbid_callback_control,
             'MsgBody' => $msg_body->toArray(),
@@ -198,7 +198,7 @@ class TimManager extends Tim
             'SyncOtherMachine' => $sync_other_machine,
             'From_Account' => $from_account,
             'To_Account' => array_map('strval', $accounts),
-            'MsgRandom' => mt_rand(0, 0xFFFFFFFF),
+            'MsgRandom' => mt_rand(0, mt_getrandmax()),
             'MsgBody' => $msg_body->toArray(),
             'OfflinePushInfo' => !is_null($offline_push_info) ? $offline_push_info->toArray() : $offline_push_info
         ]);
@@ -222,7 +222,7 @@ class TimManager extends Tim
             'SyncFromOldSystem' => $sync_from_old_system,
             'From_Account' => $from_account,
             'To_Account' => $to_account,
-            'MsgRandom' => mt_rand(0, 0xFFFFFFFF),
+            'MsgRandom' => mt_rand(0, mt_getrandmax()),
             'MsgTimeStamp' => time(),
             'MsgBody' => $msg_body->toArray()
         ]);
@@ -324,7 +324,7 @@ class TimManager extends Tim
     {
         return $this->api('all_member_push', 'im_push', [
             'Condition' => $condition,
-            'MsgRandom' => mt_rand(0, 0xFFFFFFFF), // 消息随机数，由随机函数产生。用于推送任务去重。对于不同的推送请求，MsgRandom7 天之内不能重复，否则视为相同的推送任务（调用推送 API 返回失败的时候可以用相同的 MsgRandom 进行重试）
+            'MsgRandom' => mt_rand(0, mt_getrandmax()), // 消息随机数，由随机函数产生。用于推送任务去重。对于不同的推送请求，MsgRandom7 天之内不能重复，否则视为相同的推送任务（调用推送 API 返回失败的时候可以用相同的 MsgRandom 进行重试）
             'MsgBody' => $msg_body->toArray(),
             'MsgLifeTime' => $msg_life_time,
             'From_Account' => $from_account
@@ -1164,7 +1164,7 @@ class TimManager extends Tim
     {
         return $this->api('group_open_http_svc', 'send_group_msg', [
             'GroupId' => $group_id,
-            'Random' => mt_rand(0, 0xFFFFFFFF),
+            'Random' => mt_rand(0, mt_getrandmax()),
             'MsgPriority' => $msg_priority,
             'MsgBody' => $msg_body->toArray(),
             'From_Account' => $from_account,
