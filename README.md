@@ -37,4 +37,5 @@ var_dump(Tim::errCode());
 var_dump(Tim::errMsg());
 ```
 ### 更新日志
+* `2020.12.23`：新增一些API接口，具体请查看commit
 * `2020.07.31`：更新版本到3.0，完善一些注释内容，添加全员推送 all_member_push 相关接口，2.0升级请注意querystate接口参数已修改，具体请查看commit
