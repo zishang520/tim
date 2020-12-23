@@ -14,6 +14,12 @@ class TimManager extends Tim
 {
 
     /**
+     * ============
+     * 账号管理开始
+     * ============
+     */
+
+    /**
      * 账户管理 im_open_login_svc
      */
 
@@ -126,6 +132,18 @@ class TimManager extends Tim
             'To_Account' => array_map('strval', $accounts)
         ]);
     }
+
+    /**
+     * ============
+     * 账号管理结束
+     * ============
+     */
+
+    /**
+     * ============
+     * 单聊消息开始
+     * ============
+     */
 
     /**
      * 单聊消息 openim
@@ -255,6 +273,36 @@ class TimManager extends Tim
             'MsgKey' => $msg_key
         ]);
     }
+
+    /**
+     * [admin_set_msg_read 设置单聊消息已读]
+     * @Author    zishang520
+     * @DateTime  2020-12-23T17:03:21+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/50349
+     * @param     string $report_account [进行消息已读的用户 UserId]
+     * @param     string $peer_account [进行消息已读的单聊会话的另一方用户 UserId]
+     * @return    mixed [返回值]
+     */
+    public function admin_set_msg_read(string $report_account, string $peer_account)
+    {
+        return $this->api('openim', 'admin_set_msg_read', [
+            'Report_Account' => $report_account,
+            'Peer_Account' => $peer_account
+        ]);
+    }
+
+    /**
+     * ============
+     * 单聊消息结束
+     * ============
+     */
+
+    /**
+     * ============
+     * 全员推送开始
+     * ============
+     */
 
     /**
      * 全员推送 all_member_push
@@ -434,6 +482,18 @@ class TimManager extends Tim
     }
 
     /**
+     * ============
+     * 全员推送结束
+     * ============
+     */
+
+    /**
+     * ============
+     * 资料管理开始
+     * ============
+     */
+
+    /**
      * 资料管理 profile
      */
 
@@ -472,6 +532,18 @@ class TimManager extends Tim
             'TagList' => $tag_list
         ]);
     }
+
+    /**
+     * ============
+     * 资料管理结束
+     * ============
+     */
+
+    /**
+     * ==============
+     * 关系链管理开始
+     * ==============
+     */
 
     /**
      * 关系链管理 sns
@@ -752,8 +824,40 @@ class TimManager extends Tim
     }
 
     /**
+     * ==============
+     * 关系链管理结束
+     * ==============
+     */
+
+    /**
+     * ============
+     * 群组管理开始
+     * ============
+     */
+
+    /**
      * 群组管理 group_open_http_svc
      */
+
+    /**
+     * [get_appid_group_list description]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2020-01-16T10:41:50+0800
+     * @copyright (c) ZiShang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/1614
+     * @param     int|null $limit [本次获取的群组 ID 数量的上限，不得超过 10000。如果不填，默认为最大值 10000]
+     * @param     int|null $next [群太多时分页拉取标志，第一次填0，以后填上一次返回的值，返回的 Next 为0代表拉完了]
+     * @param     string|null $group_type [如果仅需要返回特定群组形态的群组，可以通过 GroupType 进行过滤，但此时返回的 TotalCount 的含义就变成了 App 中属于该群组形态的群组总数。不填为获取所有类型的群组。 群组形态包括 Public（公开群），Private（私密群），ChatRoom（聊天室），AVChatRoom（音视频聊天室）和 BChatRoom（在线成员广播大群）]
+     * @return    mixed [返回值]
+     */
+    public function get_appid_group_list(?int $limit = null, ?int $next = null, ?string $group_type = null)
+    {
+        return $this->api('group_open_http_svc', 'get_appid_group_list', [
+            'Limit' => $limit,
+            'Next' => $next,
+            'GroupType' => $group_type
+        ]);
+    }
 
     /**
      * [create_group 创建群组]
@@ -1260,6 +1364,34 @@ class TimManager extends Tim
     }
 
     /**
+     * [get_online_member_num 获取直播群在线人数]
+     * @Author    zishang520
+     * @DateTime  2020-12-23T16:46:24+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @link      https://cloud.tencent.com/document/product/269/49180
+     * @param     string $group_id [要拉取漫游消息的群组 ID]
+     * @return    mixed [返回值]
+     */
+    public function get_online_member_num(string $group_id)
+    {
+        return $this->api('group_open_http_svc', 'get_online_member_num', [
+            'GroupId' => $group_id
+        ]);
+    }
+
+    /**
+     * ============
+     * 群组管理结束
+     * ============
+     */
+
+    /**
+     * ================
+     * 全局禁言管理开始
+     * ================
+     */
+
+    /**
      * 全局禁言管理 openconfigsvr
      */
 
@@ -1298,6 +1430,18 @@ class TimManager extends Tim
             'Get_Account' => $get_account
         ]);
     }
+
+    /**
+     * ================
+     * 全局禁言管理结束
+     * ================
+     */
+
+    /**
+     * ============
+     * 运营管理开始
+     * ============
+     */
 
     /**
      * 运营管理 openconfigsvr open_msg_svc ConfigSvc
@@ -1351,4 +1495,9 @@ class TimManager extends Tim
         ]);
     }
 
+    /**
+     * ============
+     * 运营管理结束
+     * ============
+     */
 }
