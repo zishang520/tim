@@ -30,6 +30,8 @@ class Tim
     protected $errMsg = '';
     protected $errCode = 0;
 
+    protected $msg_random = null;
+
     public function __construct($options = [])
     {
         $this->config = new Config($options);
@@ -93,7 +95,12 @@ class Tim
      */
     public function errMsg()
     {
-        return $this->errMsg;
+        try {
+            return $this->errMsg;
+        } finally {
+            // 防止重复使用
+            $this->errMsg = '';
+        }
     }
 
     /**
@@ -105,7 +112,12 @@ class Tim
      */
     public function errCode()
     {
-        return $this->errCode;
+        try {
+            return $this->errCode;
+        } finally {
+            // 防止重复使用
+            $this->errCode = 0;
+        }
     }
 
     /**
@@ -174,6 +186,37 @@ class Tim
     }
 
     /**
+     * [setMsgRandom 设置某些接口需要的MsgRandom，不设置则是随机]
+     * @Author    zishang520
+     * @DateTime  2020-12-23T17:42:35+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param     int $msg_random [随机数0~0xFFFFFFFF]
+     */
+    public function setMsgRandom(int $msg_random)
+    {
+        $this->msg_random = $msg_random;
+
+        return $this;
+    }
+
+    /**
+     * [getMsgRandom 获取随机数]
+     * @Author    zishang520
+     * @DateTime  2020-12-23T17:43:26+0800
+     * @copyright (c) zishang520 All Rights Reserved
+     * @return    int [随机数0~0xFFFFFFFF]
+     */
+    protected function getMsgRandom(): int
+    {
+        try {
+            return $this->msg_random ?? mt_rand(0, mt_getrandmax());
+        } finally {
+            // 防止重复使用
+            $this->msg_random = null;
+        }
+    }
+
+    /**
      * [api APi]
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:41:44+0800
@@ -189,7 +232,7 @@ class Tim
             'sdkappid' => $this->config->get('sdkappid'),
             'identifier' => $this->config->get('identifier'),
             'usersig' => $this->genSig($this->config->get('identifier')),
-            'random' => mt_rand(0, mt_getrandmax()),
+            'random' => $this->getMsgRandom(),
             'contenttype' => self::CONTENTTYPE
         ]);
 
@@ -224,6 +267,9 @@ class Tim
             $this->errMsg = $e->getMessage();
             $this->errCode = $e->getCode();
             return false;
+        } finally {
+            // 防止重复使用
+            $this->msg_random = null;
         }
     }
 }
