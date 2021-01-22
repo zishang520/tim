@@ -237,7 +237,7 @@ class Tim
         ]);
 
         try {
-            $body = (string) (new Client())->request(self::METHOD, sprintf('%s/%s/%s/%s?%s', self::API_URL, self::VER, $servicename, $command, $querystring), [
+            $_data = (string) (new Client())->request(self::METHOD, sprintf('%s/%s/%s/%s?%s', self::API_URL, self::VER, $servicename, $command, $querystring), [
                 'headers' => [
                     'pragma' => 'no-cache',
                     'cache-control' => 'no-cache',
@@ -252,7 +252,7 @@ class Tim
                     return !is_null($v);
                 })
             ])->getBody();
-            if (!empty($data) && !empty($body = json_decode($data))) {
+            if (!empty($_data) && !empty($body = json_decode($_data))) {
                 if (!empty($body->ErrorCode) || !isset($body->ActionStatus) || (strtolower($body->ActionStatus) !== 'ok')) {
                     $this->errMsg = $body->ErrorInfo ?? '请求失败';
                     $this->errCode = $body->ErrorCode ?? -1;
