@@ -1,11 +1,10 @@
 <?php
+
 namespace luoyy\Tim\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use luoyy\Tim\TimManager;
 
-/**
- */
 class Tim extends Facade
 {
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim\Support;
 
 use JsonSerializable;
@@ -7,7 +8,7 @@ use luoyy\Tim\Contracts\Support\Jsonable;
 use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
- * MsgBody
+ * MsgBody.
  */
 class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
@@ -16,6 +17,14 @@ class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
     public function __construct(Arrayable ...$msg_body)
     {
         $this->MsgBody = $msg_body;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 
     public function set(Arrayable ...$msg_body)
@@ -75,19 +84,11 @@ class MsgBody implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * Convert the fluent instance to JSON.
      *
-     * @param  int  $options
+     * @param int $options
      * @return string
      */
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }

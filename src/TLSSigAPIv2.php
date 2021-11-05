@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim;
 
 use Exception;
@@ -6,67 +7,13 @@ use Exception;
 class TLSSigAPIv2
 {
     private $key = false;
+
     private $sdkappid = 0;
 
     public function __construct($sdkappid, $key)
     {
         $this->sdkappid = $sdkappid;
         $this->key = $key;
-    }
-
-    /**
-     * 用于 url 的 base64 encode
-     * '+' => '*', '/' => '-', '=' => '_'
-     * @param string $string 需要编码的数据
-     * @return string 编码后的base64串，失败返回false
-     * @throws Exception
-     */
-    private function base64_url_encode($string)
-    {
-        static $replace = ['+' => '*', '/' => '-', '=' => '_'];
-        $base64 = base64_encode($string);
-        if ($base64 === false) {
-            throw new Exception('base64_encode error');
-        }
-        return strtr($base64, $replace);
-    }
-
-    /**
-     * 用于 url 的 base64 decode
-     * '+' => '*', '/' => '-', '=' => '_'
-     * @param string $base64 需要解码的base64串
-     * @return string 解码后的数据，失败返回false
-     * @throws Exception
-     */
-    private function base64_url_decode($base64)
-    {
-        static $replace = ['*' => '+', '-' => '/', '_' => '='];
-        $result = base64_decode(strtr($base64, $replace));
-        if ($result == false) {
-            throw new Exception('base64_url_decode error');
-        }
-        return $result;
-    }
-
-    /**
-     * 使用 hmac sha256 生成 sig 字段内容，经过 base64 编码
-     * @param $identifier 用户名，utf-8 编码
-     * @param $curr_time 当前生成 sig 的 unix 时间戳
-     * @param $expire 有效期，单位秒
-     * @param $base64_userbuf base64 编码后的 userbuf
-     * @param $userbuf_enabled 是否开启 userbuf
-     * @return string base64 后的 sig
-     */
-    private function hmacsha256($identifier, $curr_time, $expire, $base64_userbuf, $userbuf_enabled)
-    {
-        $content_to_be_signed = "TLS.identifier:" . $identifier . "\n"
-        . "TLS.sdkappid:" . $this->sdkappid . "\n"
-            . "TLS.time:" . $curr_time . "\n"
-            . "TLS.expire:" . $expire . "\n";
-        if (true == $userbuf_enabled) {
-            $content_to_be_signed .= "TLS.userbuf:" . $base64_userbuf . "\n";
-        }
-        return base64_encode(hash_hmac('sha256', $content_to_be_signed, $this->key, true));
     }
 
     /**
@@ -87,11 +34,11 @@ class TLSSigAPIv2
             'TLS.identifier' => strval($identifier),
             'TLS.sdkappid' => intval($this->sdkappid),
             'TLS.expire' => intval($expire),
-            'TLS.time' => intval($curr_time)
+            'TLS.time' => intval($curr_time),
         ];
 
         $base64_userbuf = '';
-        if (true == $userbuf_enabled) {
+        if ($userbuf_enabled == true) {
             $base64_userbuf = base64_encode($userbuf);
             $sig_array['TLS.userbuf'] = strval($base64_userbuf);
         }
@@ -112,32 +59,6 @@ class TLSSigAPIv2
     }
 
     /**
-     * 生成签名
-     *
-     * @param $identifier 用户账号
-     * @param int $expire 过期时间，单位秒，默认 180 天
-     * @return string 签名字符串
-     * @throws Exception
-     */
-    public function genSig($identifier, $expire = 86400 * 180)
-    {
-        return $this->__genSig($identifier, $expire, '', false);
-    }
-
-    /**
-     * 带 userbuf 生成签名。
-     * @param $identifier 用户账号
-     * @param int $expire 过期时间，单位秒，默认 180 天
-     * @param string $userbuf 用户数据
-     * @return string 签名字符串
-     * @throws Exception
-     */
-    public function genSigWithUserBuf($identifier, $expire, $userbuf)
-    {
-        return $this->__genSig($identifier, $expire, $userbuf, true);
-    }
-
-    /**
      * 验证签名。
      *
      * @param string $sig 签名内容
@@ -146,7 +67,7 @@ class TLSSigAPIv2
      * @param int $expire_time 返回的有效期，单位秒
      * @param string $userbuf 返回的用户数据
      * @param string $error_msg 失败时的错误信息
-     * @return boolean 验证是否成功
+     * @return bool 验证是否成功
      * @throws Exception
      */
     private function __verifySig($sig, $identifier, &$init_time, &$expire_time, &$userbuf, &$error_msg)
@@ -205,6 +126,32 @@ class TLSSigAPIv2
     }
 
     /**
+     * 生成签名.
+     *
+     * @param $identifier 用户账号
+     * @param int $expire 过期时间，单位秒，默认 180 天
+     * @return string 签名字符串
+     * @throws Exception
+     */
+    public function genSig($identifier, $expire = 86400 * 180)
+    {
+        return $this->__genSig($identifier, $expire, '', false);
+    }
+
+    /**
+     * 带 userbuf 生成签名。
+     * @param $identifier 用户账号
+     * @param int $expire 过期时间，单位秒，默认 180 天
+     * @param string $userbuf 用户数据
+     * @return string 签名字符串
+     * @throws Exception
+     */
+    public function genSigWithUserBuf($identifier, $expire, $userbuf)
+    {
+        return $this->__genSig($identifier, $expire, $userbuf, true);
+    }
+
+    /**
      * 带 userbuf 验证签名。
      *
      * @param string $sig 签名内容
@@ -212,7 +159,7 @@ class TLSSigAPIv2
      * @param int $init_time 返回的生成时间，unix 时间戳
      * @param int $expire_time 返回的有效期，单位秒
      * @param string $error_msg 失败时的错误信息
-     * @return boolean 验证是否成功
+     * @return bool 验证是否成功
      * @throws Exception
      */
     public function verifySig($sig, $identifier, &$init_time, &$expire_time, &$error_msg)
@@ -222,18 +169,73 @@ class TLSSigAPIv2
     }
 
     /**
-     * 验证签名
+     * 验证签名.
      * @param string $sig 签名内容
      * @param string $identifier 需要验证用户名，utf-8 编码
      * @param int $init_time 返回的生成时间，unix 时间戳
      * @param int $expire_time 返回的有效期，单位秒
      * @param string $userbuf 返回的用户数据
      * @param string $error_msg 失败时的错误信息
-     * @return boolean 验证是否成功
+     * @return bool 验证是否成功
      * @throws Exception
      */
     public function verifySigWithUserBuf($sig, $identifier, &$init_time, &$expire_time, &$userbuf, &$error_msg)
     {
         return $this->__verifySig($sig, $identifier, $init_time, $expire_time, $userbuf, $error_msg);
+    }
+
+    /**
+     * 用于 url 的 base64 encode
+     * '+' => '*', '/' => '-', '=' => '_'.
+     * @param string $string 需要编码的数据
+     * @return string 编码后的base64串，失败返回false
+     * @throws Exception
+     */
+    private function base64_url_encode($string)
+    {
+        static $replace = ['+' => '*', '/' => '-', '=' => '_'];
+        $base64 = base64_encode($string);
+        if ($base64 === false) {
+            throw new Exception('base64_encode error');
+        }
+        return strtr($base64, $replace);
+    }
+
+    /**
+     * 用于 url 的 base64 decode
+     * '+' => '*', '/' => '-', '=' => '_'.
+     * @param string $base64 需要解码的base64串
+     * @return string 解码后的数据，失败返回false
+     * @throws Exception
+     */
+    private function base64_url_decode($base64)
+    {
+        static $replace = ['*' => '+', '-' => '/', '_' => '='];
+        $result = base64_decode(strtr($base64, $replace));
+        if ($result == false) {
+            throw new Exception('base64_url_decode error');
+        }
+        return $result;
+    }
+
+    /**
+     * 使用 hmac sha256 生成 sig 字段内容，经过 base64 编码
+     * @param $identifier 用户名，utf-8 编码
+     * @param $curr_time 当前生成 sig 的 unix 时间戳
+     * @param $expire 有效期，单位秒
+     * @param $base64_userbuf base64 编码后的 userbuf
+     * @param $userbuf_enabled 是否开启 userbuf
+     * @return string base64 后的 sig
+     */
+    private function hmacsha256($identifier, $curr_time, $expire, $base64_userbuf, $userbuf_enabled)
+    {
+        $content_to_be_signed = 'TLS.identifier:' . $identifier . "\n"
+            . 'TLS.sdkappid:' . $this->sdkappid . "\n"
+            . 'TLS.time:' . $curr_time . "\n"
+            . 'TLS.expire:' . $expire . "\n";
+        if ($userbuf_enabled == true) {
+            $content_to_be_signed .= 'TLS.userbuf:' . $base64_userbuf . "\n";
+        }
+        return base64_encode(hash_hmac('sha256', $content_to_be_signed, $this->key, true));
     }
 }

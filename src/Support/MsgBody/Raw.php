@@ -1,16 +1,17 @@
 <?php
+
 namespace luoyy\Tim\Support\MsgBody;
 
 use InvalidArgumentException;
 use luoyy\Tim\Contracts\Elem;
 
 /**
- * Raw
+ * Raw.
  */
 class Raw extends Elem
 {
     /**
-     * [$Elem 消息数据部分]
+     * [$Elem 消息数据部分].
      * @var array
      */
     protected $Elem;

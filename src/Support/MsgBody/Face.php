@@ -1,27 +1,28 @@
 <?php
+
 namespace luoyy\Tim\Support\MsgBody;
 
 use luoyy\Tim\Contracts\Elem;
 
 /**
- * TIMFaceElem
+ * TIMFaceElem.
  */
 class Face extends Elem
 {
     /**
-     * [MSGTYPE 消息类型]
+     * [MSGTYPE 消息类型].
      * @var string
      */
-    const MSGTYPE = 'TIMFaceElem';
+    public const MSGTYPE = 'TIMFaceElem';
 
     /**
-     * [$Index 索引]
+     * [$Index 索引].
      * @var int
      */
     protected $Index;
 
     /**
-     * [$Data 额外数据]
+     * [$Data 额外数据].
      * @var string
      */
     protected $Data = '';
@@ -62,8 +63,8 @@ class Face extends Elem
             'MsgType' => $this->type(),
             'MsgContent' => [
                 'Index' => $this->Index,
-                'Data' => $this->Data
-            ]
+                'Data' => $this->Data,
+            ],
         ];
     }
 }

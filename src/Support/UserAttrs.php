@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim\Support;
 
 use JsonSerializable;
@@ -7,18 +8,18 @@ use luoyy\Tim\Contracts\Support\Jsonable;
 use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
- * UserAttrs
+ * UserAttrs.
  */
 class UserAttrs implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
-     * [$To_Account 目标用户帐号]
+     * [$To_Account 目标用户帐号].
      * @var string
      */
     protected $To_Account;
 
     /**
-     * [$Attrs 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节]
+     * [$Attrs 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节].
      * @var array
      */
     protected $Attrs;
@@ -27,6 +28,14 @@ class UserAttrs implements JsonSerializable, Arrayable, Renderable, Jsonable
     {
         $this->To_Account = $to_account;
         $this->Attrs = $attrs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 
     public function setTo_Account(string $to_account)
@@ -52,7 +61,7 @@ class UserAttrs implements JsonSerializable, Arrayable, Renderable, Jsonable
     {
         return [
             'To_Account' => $this->To_Account,
-            'Attrs' => $this->Attrs
+            'Attrs' => $this->Attrs,
         ];
     }
 
@@ -74,19 +83,11 @@ class UserAttrs implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * Convert the fluent instance to JSON.
      *
-     * @param  int  $options
+     * @param int $options
      * @return string
      */
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }

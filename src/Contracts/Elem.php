@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim\Contracts;
 
 use JsonSerializable;
@@ -8,6 +9,13 @@ use luoyy\Tim\Contracts\Support\Renderable;
 
 abstract class Elem implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
+    }
 
     abstract public function type();
 
@@ -41,19 +49,11 @@ abstract class Elem implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * Convert the fluent instance to JSON.
      *
-     * @param  int  $options
+     * @param int $options
      * @return string
      */
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }

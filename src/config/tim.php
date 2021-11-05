@@ -6,5 +6,5 @@ return [
     'tls' => env('TIM_TLS', 'v2'),
     'secret_key' => env('TIM_SECRET_KEY', ''),
     'public_key' => env('TIM_PUBLIC_KEY', ''),
-    'private_key' => env('TIM_PRIVATE_KEY', '')
+    'private_key' => env('TIM_PRIVATE_KEY', ''),
 ];

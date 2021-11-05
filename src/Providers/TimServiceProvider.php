@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim\Providers;
 
 use Illuminate\Foundation\Application as LaravelApplication;
@@ -8,7 +9,6 @@ use luoyy\Tim\TimManager;
 
 class TimServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -27,6 +27,31 @@ class TimServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(TimManager::class, function ($app) {
+            // 载入配置
+            return new TimManager($app->make('config')->get('tim'));
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            TimManager::class,
+        ];
+    }
+
+    /**
      * Setup the config.
      *
      * @return void
@@ -40,29 +65,5 @@ class TimServiceProvider extends ServiceProvider
             $this->app->configure('tim');
         }
         $this->mergeConfigFrom($source, 'tim');
-    }
-
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(TimManager::class, function ($app) {
-            // 载入配置
-            return new TimManager($app->make('config')->get('tim'));
-        });
-    }
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [
-            TimManager::class
-        ];
     }
 }

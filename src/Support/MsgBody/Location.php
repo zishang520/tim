@@ -1,33 +1,34 @@
 <?php
+
 namespace luoyy\Tim\Support\MsgBody;
 
 use luoyy\Tim\Contracts\Elem;
 
 /**
- * TIMLocationElem
+ * TIMLocationElem.
  */
 class Location extends Elem
 {
     /**
-     * [MSGTYPE 消息类型]
+     * [MSGTYPE 消息类型].
      * @var string
      */
-    const MSGTYPE = 'TIMLocationElem';
+    public const MSGTYPE = 'TIMLocationElem';
 
     /**
-     * [$Desc 经纬度描述]
+     * [$Desc 经纬度描述].
      * @var string
      */
     protected $Desc = '';
 
     /**
-     * [$Latitude 纬度]
+     * [$Latitude 纬度].
      * @var float
      */
     protected $Latitude;
 
     /**
-     * [$Longitude 经度]
+     * [$Longitude 经度].
      * @var float
      */
     protected $Longitude;
@@ -77,8 +78,8 @@ class Location extends Elem
             'MsgContent' => [
                 'Desc' => $this->Desc,
                 'Latitude' => $this->Latitude,
-                'Longitude' => $this->Longitude
-            ]
+                'Longitude' => $this->Longitude,
+            ],
         ];
     }
 }

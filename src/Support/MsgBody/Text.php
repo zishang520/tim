@@ -1,21 +1,22 @@
 <?php
+
 namespace luoyy\Tim\Support\MsgBody;
 
 use luoyy\Tim\Contracts\Elem;
 
 /**
- * TIMTextElem
+ * TIMTextElem.
  */
 class Text extends Elem
 {
     /**
-     * [MSGTYPE 消息类型]
+     * [MSGTYPE 消息类型].
      * @var string
      */
-    const MSGTYPE = 'TIMTextElem';
+    public const MSGTYPE = 'TIMTextElem';
 
     /**
-     * [$Text 消息数据部分]
+     * [$Text 消息数据部分].
      * @var string
      */
     protected $Text = '';
@@ -47,8 +48,8 @@ class Text extends Elem
         return [
             'MsgType' => $this->type(),
             'MsgContent' => [
-                'Text' => $this->Text
-            ]
+                'Text' => $this->Text,
+            ],
         ];
     }
 }

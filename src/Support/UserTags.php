@@ -1,4 +1,5 @@
 <?php
+
 namespace luoyy\Tim\Support;
 
 use JsonSerializable;
@@ -7,18 +8,18 @@ use luoyy\Tim\Contracts\Support\Jsonable;
 use luoyy\Tim\Contracts\Support\Renderable;
 
 /**
- * UserTags
+ * UserTags.
  */
 class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
-     * [$To_Account 目标用户帐号]
+     * [$To_Account 目标用户帐号].
      * @var string
      */
     protected $To_Account;
 
     /**
-     * [$Tags 标签集合]
+     * [$Tags 标签集合].
      * @var array
      */
     protected $Tags;
@@ -27,6 +28,14 @@ class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
     {
         $this->To_Account = $to_account;
         $this->Tags = $tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 
     public function setTo_Account(string $to_account)
@@ -52,7 +61,7 @@ class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
     {
         return [
             'To_Account' => $this->To_Account,
-            'Tags' => $this->Tags
+            'Tags' => $this->Tags,
         ];
     }
 
@@ -74,19 +83,11 @@ class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * Convert the fluent instance to JSON.
      *
-     * @param  int  $options
+     * @param int $options
      * @return string
      */
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }
