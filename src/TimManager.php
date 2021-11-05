@@ -111,10 +111,24 @@ class TimManager extends Tim
      * @param array $accounts 需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态
      * @param int|null $is_need_detail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
      * @return mixed 返回值
+     * @deprecated 2021-09-08 14:54:11
      */
     public function querystate(array $accounts, ?int $is_need_detail = null)
     {
-        return $this->api('openim', 'querystate', [
+        return $this->query_online_status($accounts, $is_need_detail);
+    }
+
+    /**
+     * 获取用户在线状态
+     * @copyright (c) zishang520 All Rights Reserved
+     * @see      https://cloud.tencent.com/document/product/269/2566
+     * @param array $accounts 需要查询这些 Identifier 的登录状态，一次最多查询500个 Identifier 的状态
+     * @param int|null $is_need_detail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
+     * @return mixed 返回值
+     */
+    public function query_online_status(array $accounts, ?int $is_need_detail = null)
+    {
+        return $this->api('openim', 'query_online_status', [
             'IsNeedDetail' => $is_need_detail,
             'To_Account' => array_map('strval', $accounts),
         ]);
@@ -264,6 +278,21 @@ class TimManager extends Tim
         return $this->api('openim', 'admin_set_msg_read', [
             'Report_Account' => $report_account,
             'Peer_Account' => $peer_account,
+        ]);
+    }
+
+    /**
+     * 查询单聊未读消息计数.
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param string $to_account 待查询的用户 UserId
+     * @param array|null $peer_account 待查询的单聊会话对端的用户 UserId。 若要查询单个会话的未读数，该字段必填 该数组最大大小为10
+     * @return mixed 返回值
+     */
+    public function get_c2c_unread_msg_num(string $to_account, ?array $peer_account = null)
+    {
+        return $this->api('openim', 'admin_set_msg_read', [
+            'To_Account' => $to_account,
+            'Peer_Account' => array_map('strval', $peer_account),
         ]);
     }
 
@@ -749,6 +778,57 @@ class TimManager extends Tim
      * ==============
      * 关系链管理结束
      * ==============.
+     */
+
+    /**
+     * 最近联系人开始.
+     */
+
+    /**
+     * 拉取会话列表.
+     * @copyright (c) zishang520 All Rights Reserved
+     * @see      https://cloud.tencent.com/document/product/269/62118
+     * @param string $from_account 填 UserID，请求拉取该用户的会话列表
+     * @param int $timestamp 普通会话的起始时间，第一页填 0
+     * @param int $startindex 普通会话的起始位置，第一页填 0
+     * @param int $toptimestamp 置顶会话的起始时间，第一页填 0
+     * @param int $topstartindex 置顶会话的起始位置，第一页填 0
+     * @param int $assistflags 会话辅助标志位: bit 0 - 是否支持置顶会话 bit 1 - 是否返回空会话 bit 2 - 是否支持置顶会话分页
+     * @return mixed 返回值
+     */
+    public function get_list(string $from_account, int $timestamp, int $startindex, int $toptimestamp, int $topstartindex, int $assistflags)
+    {
+        return $this->api('recentcontact', 'get_list', [
+            'From_Account' => $from_account,
+            'TimeStamp' => $timestamp,
+            'StartIndex' => $startindex,
+            'TopTimeStamp' => $toptimestamp,
+            'TopStartIndex' => $topstartindex,
+            'AssistFlags' => $assistflags,
+        ]);
+    }
+
+    /**
+     * 删除单个会话.
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param string $from_account 请求删除该 UserID 的会话
+     * @param int $type 会话类型：1 表示 C2C 会话；2 表示 G2C 会话
+     * @param string $to_account 待删除的会话的 UserID
+     * @param int|null $clearramble 是否清理漫游消息：1 表示清理漫游消息；0 表示不清理漫游消
+     * @return mixed 返回值
+     */
+    public function delete(string $from_account, int $type, string $to_account, ?int $clearramble = null)
+    {
+        return $this->api('recentcontact', 'delete', [
+            'From_Account' => $from_account,
+            'Type' => $type,
+            'To_Account' => $to_account,
+            'ClearRamble' => $clearramble,
+        ]);
+    }
+
+    /**
+     * 最近联系人结束.
      */
 
     /**
