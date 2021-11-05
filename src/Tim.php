@@ -24,7 +24,7 @@ class Tim
     protected $config = null;
 
     /**
-     * [$TLS TLSSig].
+     * TLSSig.
      * @var \luoyy\Tim\TLSSigAPI|\luoyy\Tim\TLSSigAPIv2
      */
     protected $TLS = null;
@@ -41,12 +41,12 @@ class Tim
     }
 
     /**
-     * [genSig 获取签名].
+     * 获取签名.
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:09:21+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param string $identifier [用户名，调用 REST API 时必须为 App 管理员帐号]
-     * @param int|int $expires [过期时间]
+     * @param string $identifier 用户名，调用 REST API 时必须为 App 管理员帐号
+     * @param int|int $expires 过期时间
      * @return string 生成的token
      */
     public function genSig(string $identifier, int $expires = 86400): string
@@ -55,7 +55,7 @@ class Tim
     }
 
     /**
-     * [identifier 获取管理员账户].
+     * 获取管理员账户.
      * @Author    zishang520
      * @DateTime  2020-03-17T18:21:33+0800
      * @copyright (c) zishang520 All Rights Reserved
@@ -67,7 +67,7 @@ class Tim
     }
 
     /**
-     * [errMsg 获取错误信息].
+     * 获取错误信息.
      * @Author    zishang520
      * @DateTime  2020-03-17T18:22:13+0800
      * @copyright (c) zishang520 All Rights Reserved
@@ -84,7 +84,7 @@ class Tim
     }
 
     /**
-     * [errCode 获取错误Code].
+     * 获取错误Code.
      * @Author    zishang520
      * @DateTime  2020-03-17T18:22:38+0800
      * @copyright (c) zishang520 All Rights Reserved
@@ -101,11 +101,11 @@ class Tim
     }
 
     /**
-     * [isBChatRoom 是否广播大群].
+     * 是否广播大群.
      * @Author    zishang520
      * @DateTime  2020-05-09T11:29:00+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param string $type [直播类型]
+     * @param string $type 直播类型
      */
     public function isBChatRoom(string $type): bool
     {
@@ -113,11 +113,11 @@ class Tim
     }
 
     /**
-     * [isAVChatRoom 是否音视频聊天室].
+     * 是否音视频聊天室.
      * @Author    zishang520
      * @DateTime  2020-05-09T11:29:12+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param string $type [直播类型]
+     * @param string $type 直播类型
      */
     public function isAVChatRoom(string $type): bool
     {
@@ -125,11 +125,11 @@ class Tim
     }
 
     /**
-     * [isChatRoom 是否聊天室].
+     * 是否聊天室.
      * @Author    zishang520
      * @DateTime  2020-05-09T11:29:49+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param string $type [直播类型]
+     * @param string $type 直播类型
      */
     public function isChatRoom(string $type): bool
     {
@@ -137,11 +137,11 @@ class Tim
     }
 
     /**
-     * [isPublicRoom 是否公开群].
+     * 是否公开群.
      * @Author    zishang520
      * @DateTime  2020-05-09T11:30:01+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param string $type [直播类型]
+     * @param string $type 直播类型
      */
     public function isPublicRoom(string $type): bool
     {
@@ -149,11 +149,11 @@ class Tim
     }
 
     /**
-     * [isPrivateRoom 是否私有群].
+     * 是否私有群.
      * @Author    zishang520
      * @DateTime  2020-05-09T11:30:12+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param string $type [直播类型]
+     * @param string $type 直播类型
      */
     public function isPrivateRoom(string $type): bool
     {
@@ -161,11 +161,11 @@ class Tim
     }
 
     /**
-     * [setMsgRandom 设置某些接口需要的MsgRandom，不设置则是随机].
+     * 设置某些接口需要的MsgRandom，不设置则是随机.
      * @Author    zishang520
      * @DateTime  2020-12-23T17:42:35+0800
      * @copyright (c) zishang520 All Rights Reserved
-     * @param int $msg_random [随机数0~0xFFFFFFFF]
+     * @param int $msg_random 随机数0~0xFFFFFFFF
      */
     public function setMsgRandom(int $msg_random)
     {
@@ -175,13 +175,13 @@ class Tim
     }
 
     /**
-     * [api APi].
+     * APi.
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:41:44+0800
      * @copyright (c) ZiShang520 All Rights Reserved
-     * @param string $servicename [内部服务名，不同的 servicename 对应不同的服务类型]
-     * @param string $command [命令字，与 servicename 组合用来标识具体的业务功能]
-     * @param array $data [请求包体]
+     * @param string $servicename 内部服务名，不同的 servicename 对应不同的服务类型
+     * @param string $command 命令字，与 servicename 组合用来标识具体的业务功能
+     * @param array $data 请求包体
      * @return mixed [返回数据]
      */
     public function api(string $servicename, string $command, array $data)
@@ -232,7 +232,7 @@ class Tim
     }
 
     /**
-     * [TLSinit 初始化Tls组件].
+     * 初始化Tls组件.
      * @Author    ZiShang520@gmail.com
      * @DateTime  2020-01-15T14:40:35+0800
      * @copyright (c) ZiShang520 All Rights Reserved
@@ -255,7 +255,7 @@ class Tim
     }
 
     /**
-     * [getMsgRandom 获取随机数].
+     * 获取随机数.
      * @Author    zishang520
      * @DateTime  2020-12-23T17:43:26+0800
      * @copyright (c) zishang520 All Rights Reserved

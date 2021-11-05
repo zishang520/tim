@@ -11,7 +11,7 @@ use luoyy\Tim\Contracts\Elem;
 class Raw extends Elem
 {
     /**
-     * [$Elem 消息数据部分].
+     * 消息数据部分.
      * @var array
      */
     protected $Elem;
@@ -21,6 +21,11 @@ class Raw extends Elem
         $this->setElem($elem);
     }
 
+    /**
+     * 设置一个消息对象
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param array $elem [description]
+     */
     public function setElem(array $elem)
     {
         if (!isset($elem['MsgType'], $elem['MsgContent'])) {

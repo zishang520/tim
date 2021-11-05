@@ -13,17 +13,22 @@ use luoyy\Tim\Contracts\Support\Renderable;
 class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
-     * [$To_Account 目标用户帐号].
+     * 目标用户帐号.
      * @var string
      */
     protected $To_Account;
 
     /**
-     * [$Tags 标签集合].
+     * 标签集合.
      * @var array
      */
     protected $Tags;
 
+    /**
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param string $to_account 目标用户帐号
+     * @param array $tags 标签集合
+     */
     public function __construct(string $to_account, array $tags)
     {
         $this->To_Account = $to_account;

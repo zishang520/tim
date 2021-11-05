@@ -10,29 +10,39 @@ use luoyy\Tim\Contracts\Elem;
 class Face extends Elem
 {
     /**
-     * [MSGTYPE 消息类型].
+     * 消息类型.
      * @var string
      */
     public const MSGTYPE = 'TIMFaceElem';
 
     /**
-     * [$Index 索引].
+     * 索引.
      * @var int
      */
     protected $Index;
 
     /**
-     * [$Data 额外数据].
+     * 额外数据.
      * @var string
      */
     protected $Data = '';
 
+    /**
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param int|null $index 索引
+     * @param string $data 额外数据
+     */
     public function __construct(int $index = null, string $data = '')
     {
         $this->Index = $index;
         $this->Data = $data;
     }
 
+    /**
+     * 设置索引.
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param int $index 索引
+     */
     public function setIndex(int $index)
     {
         $this->Index = $index;
@@ -40,6 +50,11 @@ class Face extends Elem
         return $this;
     }
 
+    /**
+     * 设置额外数据.
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param string $data 额外数据
+     */
     public function setData(string $data)
     {
         $this->Data = $data;

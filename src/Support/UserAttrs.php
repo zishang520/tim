@@ -13,17 +13,22 @@ use luoyy\Tim\Contracts\Support\Renderable;
 class UserAttrs implements JsonSerializable, Arrayable, Renderable, Jsonable
 {
     /**
-     * [$To_Account 目标用户帐号].
+     * 目标用户帐号.
      * @var string
      */
     protected $To_Account;
 
     /**
-     * [$Attrs 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节].
+     * 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节.
      * @var array
      */
     protected $Attrs;
 
+    /**
+     * @copyright (c) zishang520 All Rights Reserved
+     * @param string $to_account 目标用户帐号
+     * @param array $attrs 属性集合。每个属性是一个键值对，键为属性名，值为该用户对应的属性值。用户属性值不能超过50字节.
+     */
     public function __construct(string $to_account, array $attrs)
     {
         $this->To_Account = $to_account;
