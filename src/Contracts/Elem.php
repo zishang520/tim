@@ -26,7 +26,7 @@ abstract class Elem implements JsonSerializable, Arrayable, Renderable, Jsonable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data();
     }
@@ -36,7 +36,7 @@ abstract class Elem implements JsonSerializable, Arrayable, Renderable, Jsonable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
