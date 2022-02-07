@@ -12,7 +12,7 @@ abstract class Elem implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

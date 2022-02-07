@@ -121,7 +121,7 @@ class OfflinePushInfo implements JsonSerializable, Arrayable, Renderable, Jsonab
     /**
      * @return mixed
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

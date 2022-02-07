@@ -38,7 +38,7 @@ class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
     /**
      * @return mixed
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }
