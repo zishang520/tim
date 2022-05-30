@@ -5,15 +5,15 @@ namespace luoyy\Tim\Support\MsgBody;
 use luoyy\Tim\Contracts\Elem;
 
 /**
- * TIMSoundElem.
+ * TIMFileElem.
  */
-class Sound extends Elem
+class File extends Elem
 {
     /**
      * 消息类型.
      * @var string
      */
-    public const MSGTYPE = 'TIMSoundElem';
+    public const MSGTYPE = 'TIMFileElem';
 
     /**
      * 语音下载地址，可通过该 URL 地址直接下载相应语音.
@@ -28,16 +28,16 @@ class Sound extends Elem
     protected $UUID = '';
 
     /**
-     * 语音数据大小，单位：字节.
+     * 文件数据大小，单位：字节。
      * @var int
      */
-    protected $Size = 0;
+    protected $FileSize = 0;
 
     /**
-     * 语音时长，单位：秒.
-     * @var int
+     * 文件名称。
+     * @var string
      */
-    protected $Second = 0;
+    protected $FileName = '';
 
     /**
      * 语音下载方式标记。目前 Download_Flag 取值只能为2，表示可通过Url字段值的 URL 地址直接下载语音.
@@ -49,16 +49,16 @@ class Sound extends Elem
      * @copyright (c) zishang520 All Rights Reserved
      * @param string $url 语音下载地址，可通过该 URL 地址直接下载相应语音
      * @param string $uuid 语音的唯一标识，客户端用于索引语音的键值
-     * @param int $size 语音数据大小，单位：字节
-     * @param int $second 语音时长，单位：秒
+     * @param int $file_size 文件数据大小，单位：字节
+     * @param string $file_name 文件名称
      * @param int $download_flag 语音下载方式标记。目前 Download_Flag 取值只能为2，表示可通过Url字段值的 URL 地址直接下载语音。
      */
-    public function __construct(string $url, string $uuid, int $size, int $second, int $download_flag = 2)
+    public function __construct(string $url, string $uuid, int $file_size, string $file_name, int $download_flag = 2)
     {
         $this->Url = $url;
         $this->UUID = $uuid;
-        $this->Size = $size;
-        $this->Second = $second;
+        $this->FileSize = $file_size;
+        $this->FileName = $file_name;
         $this->Download_Flag = $download_flag;
     }
 
@@ -88,21 +88,21 @@ class Sound extends Elem
     }
 
     /**
-     * 语音数据大小，单位：字节.
+     * 文件数据大小，单位：字节.
      */
-    public function setSize(int $size)
+    public function setFileSize(int $file_size)
     {
-        $this->Size = $size;
+        $this->FileSize = $file_size;
 
         return $this;
     }
 
     /**
-     * 语音时长，单位：秒.
+     * 文件名称.
      */
-    public function setSecond(int $second)
+    public function setFileName(string $file_name)
     {
-        $this->Second = $second;
+        $this->FileName = $file_name;
 
         return $this;
     }
@@ -134,8 +134,8 @@ class Sound extends Elem
             'MsgContent' => [
                 'Url' => $this->Url,
                 'UUID' => $this->UUID,
-                'Size' => $this->Size,
-                'Second' => $this->Second,
+                'FileSize' => $this->FileSize,
+                'FileName' => $this->FileName,
                 'Download_Flag' => $this->Download_Flag,
             ],
         ];
