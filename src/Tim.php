@@ -264,7 +264,7 @@ class Tim
     protected function getMsgRandom(): int
     {
         try {
-            return $this->msg_random ?? mt_rand(0, mt_getrandmax());
+            return ($this->msg_random ?? mt_rand(0, mt_getrandmax())) % 0xFFFFFFFF;
         } finally {
             // 防止重复使用
             $this->msg_random = null;

@@ -20,14 +20,14 @@ class UserTags implements JsonSerializable, Arrayable, Renderable, Jsonable
 
     /**
      * 标签集合.
-     * @var array
+     * @var array<int, string>
      */
     protected $Tags;
 
     /**
      * @copyright (c) zishang520 All Rights Reserved
      * @param string $to_account 目标用户帐号
-     * @param array $tags 标签集合
+     * @param array<int, string> $tags 标签集合
      */
     public function __construct(string $to_account, array $tags)
     {
